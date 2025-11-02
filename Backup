@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-05T05:27:31.126Z",
-  "updatedAt": "2025-11-02T08:57:47.567Z",
+  "updatedAt": "2025-11-02T09:21:34.265Z",
   "id": "2wGj4UwRo2mb42YJ",
   "name": "Backup",
   "active": true,
@@ -170,7 +170,7 @@
         "operation": "get",
         "workflowId": {
           "__rl": true,
-          "value": "={{ $('Get row(s) in sheet').item.json['N8N Url'] }}",
+          "value": "={{ $('updated or not').item.json['N8N Url'] }}",
           "mode": "url"
         },
         "requestOptions": {}
@@ -1193,7 +1193,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "85d4c9ca-61a5-415d-82bc-6393ac60373a",
+  "versionId": "187a1819-b52b-45b1-989f-cb487cd505ed",
   "triggerCount": 1,
   "shared": [
     {
