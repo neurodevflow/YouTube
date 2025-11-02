@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-05T05:27:31.126Z",
-  "updatedAt": "2025-11-02T09:39:25.196Z",
+  "updatedAt": "2025-11-02T10:35:00.579Z",
   "id": "2wGj4UwRo2mb42YJ",
   "name": "Backup",
   "active": true,
@@ -134,7 +134,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        128,
+        336,
         -80
       ],
       "id": "aefbe939-f587-4592-af7f-3bd04890bf42",
@@ -343,7 +343,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -656,
+        -448,
         768
       ],
       "id": "d181dbf6-df99-42ec-9802-2d56e93c4ff2",
@@ -402,7 +402,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -288,
+        -80,
         752
       ],
       "id": "46506e54-5562-42fe-9720-5c335fc903b2",
@@ -416,7 +416,7 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        -464,
+        -256,
         768
       ],
       "id": "ca2abe92-8476-4a23-b1a0-fcddd52d5761",
@@ -603,7 +603,7 @@
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        -704,
+        -496,
         272
       ],
       "id": "b5a7ae4c-dbea-4c17-81eb-e8ed80f18e99",
@@ -716,7 +716,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        -480,
+        -176,
         448
       ],
       "id": "b2ec1879-95bc-4cf1-8683-26154ec6a3cb",
@@ -831,7 +831,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        -128,
+        80,
         752
       ],
       "id": "ea2ad5ce-3f57-469f-8611-410d2dcf2ab6",
@@ -855,6 +855,20 @@
       ],
       "id": "c022fa0b-74af-42af-8ac8-9a764f58099a",
       "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "amount": 0.5
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -496,
+        448
+      ],
+      "id": "727d3344-fe98-4318-a766-bba969fe651e",
+      "name": "Wait1",
+      "webhookId": "801c9260-f7a8-4b73-afba-6a8c61e280a1"
     }
   ],
   "connections": {
@@ -1128,7 +1142,7 @@
       "main": [
         [
           {
-            "node": "Append or update row in sheet",
+            "node": "Wait1",
             "type": "main",
             "index": 0
           }
@@ -1179,6 +1193,17 @@
           }
         ]
       ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1193,7 +1218,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "00e3287e-3bc9-4700-b29e-7c6e30ffcffc",
+  "versionId": "12148c33-3464-49cb-ab86-1e379df752d5",
   "triggerCount": 1,
   "shared": [
     {
