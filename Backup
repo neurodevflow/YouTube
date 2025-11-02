@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-05T05:27:31.126Z",
-  "updatedAt": "2025-11-02T08:34:08.086Z",
+  "updatedAt": "2025-11-02T08:57:47.567Z",
   "id": "2wGj4UwRo2mb42YJ",
   "name": "Backup",
   "active": true,
@@ -97,7 +97,7 @@
             {
               "id": "23044feb-1e63-4888-994c-f2a2248551fc",
               "leftValue": "={{ $json['Last modified'] }}",
-              "rightValue": "={{ $json['Last modified'] }}",
+              "rightValue": "={{ $('n8n').item.json.updatedAt }}",
               "operator": {
                 "type": "string",
                 "operation": "equals"
@@ -170,8 +170,8 @@
         "operation": "get",
         "workflowId": {
           "__rl": true,
-          "value": "={{ $('Loop Over Items').item.json.id }}",
-          "mode": "id"
+          "value": "={{ $('Get row(s) in sheet').item.json['N8N Url'] }}",
+          "mode": "url"
         },
         "requestOptions": {}
       },
@@ -1193,7 +1193,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "ba308022-fc95-467f-8fb7-6724eb627aa6",
+  "versionId": "85d4c9ca-61a5-415d-82bc-6393ac60373a",
   "triggerCount": 1,
   "shared": [
     {
