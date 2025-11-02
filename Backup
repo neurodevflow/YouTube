@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-05T05:27:31.126Z",
-  "updatedAt": "2025-11-02T06:54:47.912Z",
+  "updatedAt": "2025-11-02T08:34:08.086Z",
   "id": "2wGj4UwRo2mb42YJ",
   "name": "Backup",
   "active": true,
@@ -36,19 +36,6 @@
           "name": "n8n account"
         }
       }
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
-      "position": [
-        -2624,
-        528
-      ],
-      "id": "c022fa0b-74af-42af-8ac8-9a764f58099a",
-      "name": "Loop Over Items"
     },
     {
       "parameters": {
@@ -110,7 +97,7 @@
             {
               "id": "23044feb-1e63-4888-994c-f2a2248551fc",
               "leftValue": "={{ $json['Last modified'] }}",
-              "rightValue": "={{ $('Loop Over Items').item.json.updatedAt }}",
+              "rightValue": "={{ $json['Last modified'] }}",
               "operator": {
                 "type": "string",
                 "operation": "equals"
@@ -137,7 +124,7 @@
             {
               "id": "5d25bc78-5383-43fc-997a-6f110714385f",
               "name": "ok",
-              "value": "ok",
+              "value": "okay",
               "type": "string"
             }
           ]
@@ -455,7 +442,7 @@
           "values": [
             {
               "lookupColumn": "Title",
-              "lookupValue": "={{ $('n8n').item.json.name }}"
+              "lookupValue": "={{ $json.name }}"
             }
           ]
         },
@@ -855,6 +842,19 @@
           "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2624,
+        528
+      ],
+      "id": "c022fa0b-74af-42af-8ac8-9a764f58099a",
+      "name": "Loop Over Items"
     }
   ],
   "connections": {
@@ -874,18 +874,6 @@
         [
           {
             "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Loop Over Items": {
-      "main": [
-        [],
-        [
-          {
-            "node": "Wait",
             "type": "main",
             "index": 0
           }
@@ -1179,6 +1167,18 @@
           }
         ]
       ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1193,7 +1193,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "5b67f0a9-d748-4833-8aeb-2e9cafd61cb1",
+  "versionId": "ba308022-fc95-467f-8fb7-6724eb627aa6",
   "triggerCount": 1,
   "shared": [
     {
@@ -1219,7 +1219,7 @@
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
               "createdAt": "2025-07-05T04:33:38.764Z",
-              "updatedAt": "2025-11-02T00:00:16.585Z",
+              "updatedAt": "2025-11-02T08:34:08.029Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
               "firstName": "peter",
