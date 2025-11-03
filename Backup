@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-05T05:27:31.126Z",
-  "updatedAt": "2025-11-03T10:22:02.139Z",
+  "updatedAt": "2025-11-03T10:24:52.696Z",
   "id": "2wGj4UwRo2mb42YJ",
   "name": "Backup",
   "active": true,
@@ -499,31 +499,6 @@
     },
     {
       "parameters": {
-        "operation": "deleteFile",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $json['Shared Url'] }}",
-          "mode": "url"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        -1504,
-        400
-      ],
-      "id": "5b0ee01f-ee0c-4571-9ec0-053d70bf8270",
-      "name": "Delete a file",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "VcFFZkWlXOO43tdB",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "name": "={{ $json.name }}",
         "driveId": {
           "__rl": true,
@@ -869,6 +844,31 @@
       "id": "727d3344-fe98-4318-a766-bba969fe651e",
       "name": "Wait1",
       "webhookId": "801c9260-f7a8-4b73-afba-6a8c61e280a1"
+    },
+    {
+      "parameters": {
+        "operation": "deleteFile",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json['Shared Url'] }}",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1504,
+        400
+      ],
+      "id": "5b0ee01f-ee0c-4571-9ec0-053d70bf8270",
+      "name": "Delete a file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VcFFZkWlXOO43tdB",
+          "name": "Google Drive account"
+        }
+      }
     }
   ],
   "connections": {
@@ -934,7 +934,7 @@
         ],
         [
           {
-            "node": "n8n2",
+            "node": "Delete a file",
             "type": "main",
             "index": 0
           }
@@ -1116,17 +1116,6 @@
         ]
       ]
     },
-    "Delete a file": {
-      "main": [
-        [
-          {
-            "node": "n8n2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Upload file": {
       "main": [
         [
@@ -1204,6 +1193,17 @@
           }
         ]
       ]
+    },
+    "Delete a file": {
+      "main": [
+        [
+          {
+            "node": "n8n2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1218,7 +1218,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "5defea0e-51b0-46f5-bfbc-3e963b8885da",
+  "versionId": "d60d4326-11f9-468b-b667-94430a58fdae",
   "triggerCount": 1,
   "shared": [
     {
