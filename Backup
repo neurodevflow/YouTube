@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-05T05:27:31.126Z",
-  "updatedAt": "2025-11-03T05:13:25.104Z",
+  "updatedAt": "2025-11-03T10:22:02.139Z",
   "id": "2wGj4UwRo2mb42YJ",
   "name": "Backup",
   "active": true,
@@ -934,7 +934,7 @@
         ],
         [
           {
-            "node": "Delete a file",
+            "node": "n8n2",
             "type": "main",
             "index": 0
           }
@@ -1218,7 +1218,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "f37af3bd-7340-43f1-8fc6-5fd65d7e9f22",
+  "versionId": "5defea0e-51b0-46f5-bfbc-3e963b8885da",
   "triggerCount": 1,
   "shared": [
     {
