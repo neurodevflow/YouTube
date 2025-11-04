@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-05T05:27:31.126Z",
-  "updatedAt": "2025-11-04T02:25:12.711Z",
+  "updatedAt": "2025-11-04T02:33:50.284Z",
   "id": "2wGj4UwRo2mb42YJ",
   "name": "Backup",
   "active": true,
@@ -106,29 +106,6 @@
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "5d25bc78-5383-43fc-997a-6f110714385f",
-              "name": "ok",
-              "value": "okay",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        80,
-        -16
-      ],
-      "id": "aefbe939-f587-4592-af7f-3bd04890bf42",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
         "operation": "get",
         "workflowId": {
           "__rl": true,
@@ -141,7 +118,7 @@
       "typeVersion": 1,
       "position": [
         -1712,
-        752
+        768
       ],
       "id": "65224d96-3e3c-4e75-8a3f-04074e4f37b0",
       "name": "n8n1",
@@ -165,7 +142,7 @@
       "type": "n8n-nodes-base.n8n",
       "typeVersion": 1,
       "position": [
-        -1280,
+        -1296,
         400
       ],
       "id": "91b41a32-a21b-40f9-99e9-e838abb9e3d1",
@@ -227,8 +204,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -864,
-        624
+        -1088,
+        640
       ],
       "id": "5146945f-601b-45ff-ae32-28ef34eea507",
       "name": "Edit Fields1"
@@ -280,7 +257,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -880,
+        -1088,
         896
       ],
       "id": "8fba71aa-9206-4350-a1a1-dfd5bf932121",
@@ -291,8 +268,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -656,
-        736
+        -848,
+        752
       ],
       "id": "d181dbf6-df99-42ec-9802-2d56e93c4ff2",
       "name": "Merge"
@@ -350,8 +327,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -272,
-        736
+        -464,
+        752
       ],
       "id": "46506e54-5562-42fe-9720-5c335fc903b2",
       "name": "Edit Fields3"
@@ -364,8 +341,8 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        -464,
-        736
+        -656,
+        752
       ],
       "id": "ca2abe92-8476-4a23-b1a0-fcddd52d5761",
       "name": "Aggregate"
@@ -432,8 +409,8 @@
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        -1312,
-        624
+        -1296,
+        640
       ],
       "id": "d2a47da9-b360-45c5-a73d-8ab54a706a60",
       "name": "Create a file",
@@ -463,7 +440,7 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -1312,
+        -1296,
         896
       ],
       "id": "2348b510-eff4-44e7-88e6-1991ce04183c",
@@ -493,8 +470,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -656,
-        464
+        -848,
+        496
       ],
       "id": "5b5621c8-7058-43ea-83ca-dc6d42904c7b",
       "name": "Upload file1",
@@ -526,8 +503,8 @@
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        -656,
-        288
+        -848,
+        320
       ],
       "id": "b5a7ae4c-dbea-4c17-81eb-e8ed80f18e99",
       "name": "Edit a file",
@@ -640,8 +617,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        -272,
-        464
+        -464,
+        496
       ],
       "id": "b2ec1879-95bc-4cf1-8683-26154ec6a3cb",
       "name": "Append or update row in sheet",
@@ -755,8 +732,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        -96,
-        736
+        -272,
+        752
       ],
       "id": "ea2ad5ce-3f57-469f-8611-410d2dcf2ab6",
       "name": "Append row in sheet",
@@ -787,8 +764,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -464,
-        464
+        -656,
+        496
       ],
       "id": "727d3344-fe98-4318-a766-bba969fe651e",
       "name": "Wait1",
@@ -827,21 +804,8 @@
       "name": "Code6",
       "type": "n8n-nodes-base.code",
       "position": [
-        -960,
+        -1088,
         320
-      ],
-      "typeVersion": 2
-    },
-    {
-      "parameters": {
-        "jsCode": "return items.map(item => {\n  const jsonData = JSON.stringify(item.json);\n  const binaryData = Buffer.from(jsonData).toString('base64');\n  item.binary = {\n    data: {\n      data: binaryData,\n      mimeType: 'application/json',\n      fileName: 'data.json'\n    }\n  };\n  return item;\n});"
-      },
-      "id": "b49f7804-a6c8-4283-bdda-62e0a5892b42",
-      "name": "Code2",
-      "type": "n8n-nodes-base.code",
-      "position": [
-        -2096,
-        272
       ],
       "typeVersion": 2
     },
@@ -853,8 +817,8 @@
       "name": "Code",
       "type": "n8n-nodes-base.code",
       "position": [
-        -1072,
-        528
+        -1088,
+        496
       ],
       "typeVersion": 2
     },
@@ -867,7 +831,7 @@
       "type": "n8n-nodes-base.code",
       "position": [
         -1504,
-        624
+        640
       ],
       "typeVersion": 2
     },
@@ -883,6 +847,29 @@
         896
       ],
       "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d25bc78-5383-43fc-997a-6f110714385f",
+              "name": "ok",
+              "value": "okay",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -48,
+        -16
+      ],
+      "id": "aefbe939-f587-4592-af7f-3bd04890bf42",
+      "name": "Edit Fields"
     }
   ],
   "connections": {
@@ -938,17 +925,6 @@
         [
           {
             "node": "Delete a file",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -1218,6 +1194,17 @@
           }
         ]
       ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1232,7 +1219,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "2bc7c059-8bee-4bee-870f-bd5ec475626b",
+  "versionId": "33ccfb49-1739-419b-bb21-af0512d2ab7c",
   "triggerCount": 1,
   "shared": [
     {
@@ -1258,7 +1245,7 @@
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
               "createdAt": "2025-07-05T04:33:38.764Z",
-              "updatedAt": "2025-11-04T00:00:27.119Z",
+              "updatedAt": "2025-11-04T08:39:17.258Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
               "firstName": "peter",
