@@ -1,0 +1,1300 @@
+{
+  "createdAt": "2025-11-04T02:11:31.647Z",
+  "updatedAt": "2025-11-04T02:21:54.477Z",
+  "id": "THjQ18vPAekMx567",
+  "name": "qwertyuiop1",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3568,
+        -48
+      ],
+      "id": "5fbc0720-4b2d-4bbe-bfab-f890549541f6",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -3376,
+        -144
+      ],
+      "id": "7db6bc46-cca1-42c2-958b-5258695e5aaf",
+      "name": "n8n",
+      "credentials": {
+        "n8nApi": {
+          "id": "kAqvS1atuC8GNau2",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a8195660-b59a-440c-8114-ff6377a536b0",
+              "leftValue": "={{ $json['N8N Url'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2592,
+        -128
+      ],
+      "id": "ca9b4ad8-2e6b-42d9-84bb-1472eeada4ae",
+      "name": "Exist or not in Sheet"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "23044feb-1e63-4888-994c-f2a2248551fc",
+              "leftValue": "={{ $json['Last modified'] }}",
+              "rightValue": "={{ $('n8n').item.json.updatedAt }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2400,
+        -368
+      ],
+      "id": "0a80d2e7-afb3-4856-8795-1e623e6a8df6",
+      "name": "updated or not"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d25bc78-5383-43fc-997a-6f110714385f",
+              "name": "ok",
+              "value": "okay",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -608,
+        -688
+      ],
+      "id": "9e450e55-3248-4124-aa8d-958fee55eecd",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $('Loop Over Items').item.json.id }}",
+          "mode": "id"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -2400,
+        96
+      ],
+      "id": "595ca7c5-1503-471b-9e5f-e19fc863e0b7",
+      "name": "n8n1",
+      "credentials": {
+        "n8nApi": {
+          "id": "kAqvS1atuC8GNau2",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $('updated or not').item.json['N8N Url'] }}",
+          "mode": "url"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -1968,
+        -272
+      ],
+      "id": "7d883988-2f4c-4f35-90ca-c68526ecc890",
+      "name": "n8n2",
+      "credentials": {
+        "n8nApi": {
+          "id": "kAqvS1atuC8GNau2",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2960,
+        -128
+      ],
+      "id": "d82ad193-4434-4f2e-96f2-6fa4af6aa95c",
+      "name": "Wait",
+      "webhookId": "4e6da3b8-0f5e-418c-9d2d-12d53e17bbcf"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -3568,
+        -224
+      ],
+      "id": "e7cf5877-95a1-464d-9919-f44f0645abc2",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "34775986-2867-4e53-b4b3-f6392d652107",
+              "name": "github",
+              "value": "={{ $json.content.html_url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1552,
+        -48
+      ],
+      "id": "72faf4c0-032b-41bc-bd6f-3a1e2358154f",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b187d35a-9ae3-46c9-bb08-bd3e07d9d0b8",
+              "name": "drive_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "09e140c2-9de6-4ede-b9e0-15689f941e1f",
+              "name": "createdAt",
+              "value": "={{ $('Code').item.json.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "eb108deb-01c6-4d70-9448-c093867d42f1",
+              "name": "updatedAt",
+              "value": "={{ $('Code').item.json.updatedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "5dffcc1f-5136-4ae0-826b-b8d73dc56e18",
+              "name": "n8n_id",
+              "value": "={{ $('Code').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "e76b5251-6955-4f7a-a986-35dae2912e2e",
+              "name": "name",
+              "value": "={{ $('Code').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "c537c5d0-8d23-41a9-975b-81296ac030a6",
+              "name": "tag",
+              "value": "={{ $('Code').item.json.shared[0].project.projectRelations[0].user.personalizationAnswers.reportedSource }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1568,
+        240
+      ],
+      "id": "8029abf8-cf4d-40bd-900a-d2c1d5a580ce",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1344,
+        80
+      ],
+      "id": "c8206dc4-b585-4f46-8bab-1d72bb10de71",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b7c6c7d4-ac5d-4964-9a33-d792393ef210",
+              "name": "github",
+              "value": "={{ $json.data[0].github }}",
+              "type": "string"
+            },
+            {
+              "id": "b2c60222-d8ef-4753-b4a6-97ee1d55b6ab",
+              "name": "data[1].drive_id",
+              "value": "={{ $json.data[1].drive_id }}",
+              "type": "string"
+            },
+            {
+              "id": "1c699d7d-6c69-4b92-a664-084513dfc879",
+              "name": "data[1].createdAt",
+              "value": "={{ $json.data[1].createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "69b38d9f-7ddd-40ef-a391-ce44cb480055",
+              "name": "data[1].updatedAt",
+              "value": "={{ $json.data[1].updatedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "6000cea5-f98c-4d75-9d38-e09d104bafb2",
+              "name": "data[1].n8n_id",
+              "value": "={{ $json.data[1].n8n_id }}",
+              "type": "string"
+            },
+            {
+              "id": "f7d93c15-f265-4ce5-96ff-1bdc1818c166",
+              "name": "data[1].name",
+              "value": "={{ $json.data[1].name }}",
+              "type": "string"
+            },
+            {
+              "id": "09d3b016-c290-4b09-aba1-5f6db4fd61a7",
+              "name": "data[1].tag",
+              "value": "={{ $json.data[1].tag }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -960,
+        80
+      ],
+      "id": "75978805-9050-4790-ba55-ef8ae3f4bb46",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -1152,
+        80
+      ],
+      "id": "08f4cee5-dfe3-479c-8bc5-0bd1b364f1cf",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1eiKcnWhkZmTJbhvvtLHhp9D3CCtTW3_awRTBTNy2ByQ",
+          "mode": "list",
+          "cachedResultName": "Backups",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eiKcnWhkZmTJbhvvtLHhp9D3CCtTW3_awRTBTNy2ByQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eiKcnWhkZmTJbhvvtLHhp9D3CCtTW3_awRTBTNy2ByQ/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Title",
+              "lookupValue": "={{ $json.name }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -2768,
+        -128
+      ],
+      "id": "92e082a1-3c71-4a06-bd30-321fc025f800",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XkUcr0YLOP2CkVg1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "=https://github.com/Peter-Aistralis/",
+          "mode": "url"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('n8n1').item.json.tags[0].name }}",
+          "mode": "name"
+        },
+        "filePath": "={{ $('n8n1').item.json.name }}",
+        "binaryData": true,
+        "commitMessage": "first commit"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        -2000,
+        -48
+      ],
+      "id": "2d139301-9e16-4913-9a3b-73d65874a11f",
+      "name": "Create a file",
+      "webhookId": "16e5f2e5-4072-4f0a-b013-a1d2b5e9b390",
+      "credentials": {
+        "githubApi": {
+          "id": "RTpLjX5nT9JPuB8K",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.name }}",
+        "driveId": {
+          "__rl": true,
+          "value": "1HmBSAtGgcZLSbO2BxikQbvbzAcZzY7u9",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/u/0/folders/1SDMuJ-oFxW1laCNTpvFMb2t5Gd2ofLhnhttps://drive.google.com/drive/u/0/folders/1SDMuJ-oFxW1laCNTpvFMb2t5Gd2ofLhn",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2000,
+        240
+      ],
+      "id": "647bc95f-ee3b-4498-951e-1d0e4060cf00",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VcFFZkWlXOO43tdB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('n8n2').item.json.name }}",
+        "driveId": {
+          "__rl": true,
+          "value": "1HmBSAtGgcZLSbO2BxikQbvbzAcZzY7u9",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/u/0/folders/1SDMuJ-oFxW1laCNTpvFMb2t5Gd2ofLhnhttps://drive.google.com/drive/u/0/folders/1SDMuJ-oFxW1laCNTpvFMb2t5Gd2ofLhn",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1344,
+        -208
+      ],
+      "id": "eb438d64-1a52-466e-aa1c-725cb2c570f9",
+      "name": "Upload file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VcFFZkWlXOO43tdB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "https://github.com/Peter-Aistralis",
+          "mode": "url"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Exist or not in Sheet').first()\n.json.Tag }}",
+          "mode": "name"
+        },
+        "filePath": "={{ $('n8n2').first().json.name }}",
+        "binaryData": true,
+        "commitMessage": "Change commit by Peter"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        -1344,
+        -384
+      ],
+      "id": "19c94c33-5de4-40ff-bb46-6128f928e495",
+      "name": "Edit a file",
+      "webhookId": "6d34e561-d4d8-45ad-bad5-b38b775c223d",
+      "credentials": {
+        "githubApi": {
+          "id": "RTpLjX5nT9JPuB8K",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1eiKcnWhkZmTJbhvvtLHhp9D3CCtTW3_awRTBTNy2ByQ",
+          "mode": "list",
+          "cachedResultName": "Backups",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eiKcnWhkZmTJbhvvtLHhp9D3CCtTW3_awRTBTNy2ByQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eiKcnWhkZmTJbhvvtLHhp9D3CCtTW3_awRTBTNy2ByQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $('n8n2').item.json.name }}",
+            "Last modified": "={{ $('n8n2').item.json.updatedAt }}",
+            "Shared Url": "=https://drive.google.com/file/d/{{ $json.id }}"
+          },
+          "matchingColumns": [
+            "Title"
+          ],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tag",
+              "displayName": "Tag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Created",
+              "displayName": "Date Created",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last modified",
+              "displayName": "Last modified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "N8N Url",
+              "displayName": "N8N Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Github Url",
+              "displayName": "Github Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Shared Url",
+              "displayName": "Shared Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -960,
+        -208
+      ],
+      "id": "a234a907-b585-4294-8d6b-2278c7db1f7e",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XkUcr0YLOP2CkVg1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1eiKcnWhkZmTJbhvvtLHhp9D3CCtTW3_awRTBTNy2ByQ",
+          "mode": "list",
+          "cachedResultName": "Backups",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eiKcnWhkZmTJbhvvtLHhp9D3CCtTW3_awRTBTNy2ByQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eiKcnWhkZmTJbhvvtLHhp9D3CCtTW3_awRTBTNy2ByQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.data[1].name }}",
+            "Date Created": "={{ $json.data[1].createdAt }}",
+            "Last modified": "={{ $json.data[1].updatedAt }}",
+            "N8N Url": "=https://workflows.zeriobox.com/workflow/{{ $json.data[1].n8n_id }}",
+            "Tag": "={{ $('n8n1').item.json.tags[0].name }}",
+            "Github Url": "={{ $json.github }}",
+            "Shared Url": "=https://drive.google.com/file/d/{{ $json.data[1].drive_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tag",
+              "displayName": "Tag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Created",
+              "displayName": "Date Created",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last modified",
+              "displayName": "Last modified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "N8N Url",
+              "displayName": "N8N Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Github Url",
+              "displayName": "Github Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Shared Url",
+              "displayName": "Shared Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -784,
+        80
+      ],
+      "id": "4268bc64-36a5-417c-81ac-4fb4fffa386a",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XkUcr0YLOP2CkVg1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3184,
+        -144
+      ],
+      "id": "4163aac6-1648-4814-8d79-1b15eb0c49a3",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "amount": 0.5
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1152,
+        -208
+      ],
+      "id": "c5943659-69ce-4dca-88ea-3723afd60996",
+      "name": "Wait1",
+      "webhookId": "801c9260-f7a8-4b73-afba-6a8c61e280a1"
+    },
+    {
+      "parameters": {
+        "operation": "deleteFile",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json['Shared Url'] }}",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2192,
+        -272
+      ],
+      "id": "d680ce53-6bd2-40c1-a45d-4bd80188184e",
+      "name": "Delete a file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VcFFZkWlXOO43tdB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const jsonString = JSON.stringify(items[0].json, null, 2); // keeps indentation\nconst dataBuffer = Buffer.from(jsonString);\n\nreturn [\n  {\n    binary: {\n      data: {\n        data: dataBuffer.toString('base64'),\n        fileName: 'workflow.json',\n        mimeType: 'application/json',\n      },\n    },\n    json: {}, // optional, can include metadata\n  },\n];\n"
+      },
+      "id": "d1bbdf9e-dea3-46b7-a641-ff1dabaecc52",
+      "name": "Code6",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -1648,
+        -352
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -2208,
+        -48
+      ],
+      "id": "4ef353ef-8ae0-4999-9e81-c95fcda791c3",
+      "name": "Convert to File2"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -2192,
+        240
+      ],
+      "id": "5d0ff8b7-8304-4bee-aa19-b2c584d75a27",
+      "name": "Convert to File3"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const jsonData = JSON.stringify(item.json);\n  const binaryData = Buffer.from(jsonData).toString('base64');\n  item.binary = {\n    data: {\n      data: binaryData,\n      mimeType: 'application/json',\n      fileName: 'data.json'\n    }\n  };\n  return item;\n});"
+      },
+      "id": "f3bc43bf-15cc-4f55-8237-7c8ff0b47cbc",
+      "name": "Code2",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -2784,
+        -400
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const jsonData = JSON.stringify(item.json);\n  const binaryData = Buffer.from(jsonData).toString('base64');\n  item.binary = {\n    data: {\n      data: binaryData,\n      mimeType: 'application/json',\n      fileName: 'data.json'\n    }\n  };\n  return item;\n});"
+      },
+      "id": "c39cb6c7-9d5a-4b72-ad29-cb93c1e2eeb1",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -1760,
+        -144
+      ],
+      "typeVersion": 2
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exist or not in Sheet": {
+      "main": [
+        [
+          {
+            "node": "updated or not",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "n8n1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "updated or not": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert to File3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n2": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Exist or not in Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file1": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit a file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a file": {
+      "main": [
+        [
+          {
+            "node": "n8n2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File2": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File3": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Upload file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code6": {
+      "main": [
+        [
+          {
+            "node": "Edit a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "2a819c32-390b-43e3-8e39-1a1009fff44e",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-11-04T02:11:31.647Z",
+      "updatedAt": "2025-11-04T02:11:31.647Z",
+      "role": "workflow:owner",
+      "workflowId": "THjQ18vPAekMx567",
+      "projectId": "2KiFcKNLK1JyaklJ",
+      "project": {
+        "createdAt": "2025-07-05T04:34:00.267Z",
+        "updatedAt": "2025-07-05T04:35:03.731Z",
+        "id": "2KiFcKNLK1JyaklJ",
+        "name": "peter aistralis <peterjawel@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-05T04:34:00.267Z",
+            "updatedAt": "2025-07-05T04:34:00.267Z",
+            "role": "project:personalOwner",
+            "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
+            "projectId": "2KiFcKNLK1JyaklJ",
+            "user": {
+              "createdAt": "2025-07-05T04:33:38.764Z",
+              "updatedAt": "2025-11-04T00:00:27.119Z",
+              "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
+              "email": "peterjawel@gmail.com",
+              "firstName": "peter",
+              "lastName": "aistralis",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-05T04:35:25.871Z",
+                "personalization_survey_n8n_version": "1.100.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "youtube"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "FAkXhJwuAslD2JDu",
+                "userActivatedAt": 1751716484498,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753381963375
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-11-03",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-07-05T05:27:25.021Z",
+      "updatedAt": "2025-07-05T05:27:25.021Z",
+      "id": "94UYKbs3nzwYCJqO",
+      "name": "YouTube"
+    }
+  ]
+}
