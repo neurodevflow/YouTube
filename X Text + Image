@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-11T08:33:18.547Z",
+  "updatedAt": "2025-11-18T02:48:47.981Z",
   "createdAt": "2025-11-11T04:41:06.215Z",
   "id": "ZHJDHmqyUQAIBd97",
   "name": "X Text + Image",
@@ -11,7 +11,7 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -496,
+        -656,
         -176
       ],
       "id": "3cd33c33-e99e-412f-acb4-ef8ddb7f44ef",
@@ -32,7 +32,7 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -304,
+        -160,
         -176
       ],
       "id": "b7ceea65-f6c7-4bf0-a2ff-9bbaeed77831",
@@ -70,7 +70,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -112,
+        96,
         -176
       ],
       "id": "86f901d5-d340-4b46-b97e-74f9394b400e",
@@ -99,13 +99,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n    \"text\": \"Jihaaaaaa, it is working\",\n     \"media\": {\n       \"media_ids\": [\n            \"{{ $json.data.id }}\"\n        ]\n    }\n}",
+        "jsonBody": "={\n    \"text\": \"{{ $('Edit Fields').item.json.input_text }}\",\n     \"media\": {\n       \"media_ids\": [\n            \"{{ $json.data.id }}\"\n        ]\n    }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        96,
+        320,
         -176
       ],
       "id": "b892b231-06c5-41ad-bebf-68a21b6b5dd7",
@@ -116,6 +116,29 @@
           "name": "X Credentials"
         }
       }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "594b5395-ac49-4ed5-8d23-872531efa715",
+              "name": "input_text",
+              "value": "this is a text",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -448,
+        -176
+      ],
+      "id": "2dda0720-79a7-4c11-aec0-3917febb05be",
+      "name": "Edit Fields"
     }
   ],
   "connections": {
@@ -123,7 +146,7 @@
       "main": [
         [
           {
-            "node": "Download file",
+            "node": "Edit Fields",
             "type": "main",
             "index": 0
           }
@@ -151,6 +174,17 @@
           }
         ]
       ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -159,8 +193,8 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "0b429437-0876-439c-bd1c-b0e1a37949cc",
-  "versionCounter": 1,
+  "versionId": "328f7dc0-580d-47fc-ba6b-df72958661e0",
+  "versionCounter": 3,
   "triggerCount": 0,
   "shared": [
     {
@@ -184,7 +218,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-15T00:00:36.291Z",
+              "updatedAt": "2025-11-19T00:00:11.311Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -211,7 +245,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-14",
+              "lastActiveAt": "2025-11-18",
               "isPending": false
             }
           }
