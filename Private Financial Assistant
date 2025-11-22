@@ -1,0 +1,233 @@
+{
+  "updatedAt": "2025-11-14T13:45:00.473Z",
+  "createdAt": "2025-11-14T10:10:30.304Z",
+  "id": "szUDREfsQyI0SRBC",
+  "name": "Private Financial Assistant",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        -96
+      ],
+      "id": "dc21d8b0-d3fb-43d7-a843-979f585d065a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9eb8a7cb-d37b-47e7-a230-77708cc7cd57",
+              "name": "question",
+              "value": "I did drink 4 beers at  Padel in Pererenan and then I went to Bali Social Club and played padel over there",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -288,
+        -96
+      ],
+      "id": "7ba2f828-4a9b-4683-9ce5-a479d2696c4b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.question }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant and you analyze the incoming message.\n2 options: a request to update/delete/write to the database\nor a request to get information from the database.\nAnd you call the right tool\n\nIMPORTANT RULES:\n1. You MUST NOT split user input into multiple tool calls.\n2. Always call exactly ONE tool per user message.\n3. Forward the raw user message exactly as received.\n4. Do not interpret or break it into multiple events.\n5. Only the tool's workflow will perform any analysis.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -48,
+        -96
+      ],
+      "id": "1c06c774-8452-4eb8-a79a-0459f9acd9d3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -80,
+        208
+      ],
+      "id": "eafe6a95-91ae-42a5-b718-87c0d7d0a845",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "TVzP9p8nOtsqZFLa",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "call this tool if something needs to be written or updated  to the database ",
+        "workflowId": {
+          "__rl": true,
+          "value": "IgPl6godZmp2eO6t",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/IgPl6godZmp2eO6t",
+          "cachedResultName": "Incoming_PFA"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        64,
+        128
+      ],
+      "id": "fd66f054-1851-4ff3-91ba-212fd7dd94e7",
+      "name": "Call 'Incoming_PFA'"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Incoming_PFA'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "99e6f444-9b02-48f8-be91-cc693da3dfba",
+  "versionCounter": 21,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-14T10:10:30.304Z",
+      "createdAt": "2025-11-14T10:10:30.304Z",
+      "role": "workflow:owner",
+      "workflowId": "szUDREfsQyI0SRBC",
+      "projectId": "2KiFcKNLK1JyaklJ",
+      "project": {
+        "updatedAt": "2025-07-05T04:35:03.731Z",
+        "createdAt": "2025-07-05T04:34:00.267Z",
+        "id": "2KiFcKNLK1JyaklJ",
+        "name": "peter aistralis <peterjawel@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-07-05T04:34:00.267Z",
+            "createdAt": "2025-07-05T04:34:00.267Z",
+            "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
+            "projectId": "2KiFcKNLK1JyaklJ",
+            "user": {
+              "updatedAt": "2025-11-22T00:00:12.035Z",
+              "createdAt": "2025-07-05T04:33:38.764Z",
+              "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
+              "email": "peterjawel@gmail.com",
+              "firstName": "peter",
+              "lastName": "aistralis",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-05T04:35:25.871Z",
+                "personalization_survey_n8n_version": "1.100.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "youtube"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "FAkXhJwuAslD2JDu",
+                "userActivatedAt": 1751716484498,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753381963375
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-11-21",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-07-05T05:27:25.021Z",
+      "createdAt": "2025-07-05T05:27:25.021Z",
+      "id": "94UYKbs3nzwYCJqO",
+      "name": "YouTube"
+    }
+  ]
+}
