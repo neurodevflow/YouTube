@@ -1,0 +1,504 @@
+{
+  "updatedAt": "2025-11-22T04:28:58.784Z",
+  "createdAt": "2025-11-14T10:13:44.431Z",
+  "id": "IgPl6godZmp2eO6t",
+  "name": "Incoming_PFA",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -656,
+        -144
+      ],
+      "id": "9ff434c6-c179-4802-a21f-55f1df2fd9e9",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When Executed by Another Workflow').item.json.query }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a helpful accountant. You receive either a receipt or a natural-language text describing expenses.\n\nYour task is to analyze the input and return exactly the following JSON structure. You must **never return extra text, explanations, or fields**. Use **double quotes** for all keys and string values. Booleans must be true/false.\nThe JSON object must be the **ONLY** output. Do not include any text, newlines, or markdown fences (```json). Begin the output with `{` and end it with `}`.\n\nCRITICAL INSTRUCTIONS:\n\n1. date: string \"YYYY-MM-DD\". Use the date found in the text/receipt. If no date is mentioned, use today's date. Today's date is {{$now}}\n2. description: short string describing the expense.\n3. has_receipt: boolean, true only if the input mentions a receipt, otherwise false.\n4. payment_method: string. Default is \"cash\" unless a payment method is explicitly mentioned.\n5. **quantity** must always be a **JSON number** (e.g., 1, 2.5), **never a string**.\n6. When a string or price value is unknown, use the **literal JSON keyword `null`** (without quotes).\n\n7. items: an array of objects. Each object must have:\n    - item_name: string or null\n    - quantity: number or null\n    - unit_price: string or null (extract price as a string, e.g., \"120\" or \"120.00\")\n    - total_price: string or null (extract price as a string)\n    - location: string or null\n8. Service Item Rule: Only create a service item (e.g., \"Padel Session Fee\") when the activity is mentioned in natural language and its cost is part of the total. If the input is an itemized receipt, DO NOT create a separate general service item. List only the items explicitly found on the receipt."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -416,
+        -144
+      ],
+      "id": "c5fa1fbc-d983-4d30-8f46-b77ca5953715",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -528,
+        80
+      ],
+      "id": "00d41223-39c7-4a92-8097-35c3ea700c75",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "TVzP9p8nOtsqZFLa",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"name\": \"Expense\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"date\": { \"type\": \"string\" },\n    \"description\": { \"type\": \"string\" },\n    \"has_receipt\": { \"type\": \"boolean\" },\n    \"payment_method\": { \"type\": \"string\" },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_name\": { \"type\": \"string\" },\n          \"quantity\": { \"type\": \"number\" },\n          \"unit_price\": { \"type\": [\"string\", \"null\"] },\n          \"total_price\": { \"type\": [\"string\", \"null\"] },\n          \"location\": { \"type\": [\"string\", \"null\"] }\n        },\n        \"required\": [\"item\", \"quantity\", \"unit_price\", \"total_price\", \"location\"]\n      }\n    }\n  },\n  \"required\": [\"date\", \"description\", \"has_receipt\", \"payment_method\", \"items\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        32
+      ],
+      "id": "ac92a82a-5607-48ef-969f-706ebb149dff",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "item_categories",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "item_name",
+              "condition": "eq",
+              "keyValue": "={{ $json.item_name }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        544,
+        -80
+      ],
+      "id": "cfe30351-a0ca-4331-a6bc-96ace0b482d7",
+      "name": "Get many rows",
+      "credentials": {
+        "supabaseApi": {
+          "id": "KZ6ufBeRCXc7olwi",
+          "name": "Supabase ZerioBox"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.items",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        -144
+      ],
+      "id": "7385aee8-1976-4e93-924f-9c41184f03c2",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        112,
+        -144
+      ],
+      "id": "ed288b74-49f9-4bca-89ca-1834ac735573",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "knowledge_base",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "location",
+              "condition": "eq",
+              "keyValue": "={{ $('Loop Over Items').item.json.location }}"
+            },
+            {
+              "keyName": "item_name",
+              "condition": "eq",
+              "keyValue": "={{ $json.item_name.toLowerCase() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -80
+      ],
+      "id": "cd18cada-de24-45ea-a213-109f620c7907",
+      "name": "Get many rows1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "KZ6ufBeRCXc7olwi",
+          "name": "Supabase ZerioBox"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2feeff6d-adc8-4529-bab4-078a39d18875",
+              "name": "total_price",
+              "value": "={{ (parseFloat($('Get many rows1').item.json.unit_price) || 0) * (parseFloat($('Loop Over Items').item.json.quantity) || 0) }}\n",
+              "type": "number"
+            },
+            {
+              "id": "c340caa5-a9e4-482e-8992-3e9d5035dca5",
+              "name": "item_name",
+              "value": "={{ $json.item_name }}",
+              "type": "string"
+            },
+            {
+              "id": "d3c80b5f-c334-4d9f-b2fc-64bef76105ff",
+              "name": "subcategory",
+              "value": "={{ $json.subcategory }}",
+              "type": "string"
+            },
+            {
+              "id": "ede17fca-9b71-4c1f-a7b3-51f403e4ad93",
+              "name": "category_id",
+              "value": "={{ $json.category_id }}",
+              "type": "string"
+            },
+            {
+              "id": "ebe3e411-5961-42dc-bd38-326a5340a2fe",
+              "name": "location",
+              "value": "={{ $('Get many rows1').item.json.location }}",
+              "type": "string"
+            },
+            {
+              "id": "7fa2dce0-07cc-4428-993b-ee7ff91c9f8f",
+              "name": "item_name",
+              "value": "={{ $('Get many rows1').item.json.item_name }}",
+              "type": "string"
+            },
+            {
+              "id": "40147e72-3e39-46f2-b8f2-d63a77b7855d",
+              "name": "unit_price",
+              "value": "={{ $('Get many rows1').item.json.unit_price }}",
+              "type": "string"
+            },
+            {
+              "id": "b40f43a2-57bd-4422-a3bc-060a7f5265ee",
+              "name": "quantity",
+              "value": "={{ $('Loop Over Items').item.json.quantity }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "ignoreConversionErrors": false
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        768,
+        -80
+      ],
+      "id": "1ba34314-8597-41c9-995d-5651cc8c9c18",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -304
+      ],
+      "id": "6e8d56cd-1c00-42a7-8ac5-2192709dbc3a",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        544,
+        -304
+      ],
+      "id": "f65a050a-5c91-4baa-a018-aa80623b5a18",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "total_price"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        -304
+      ],
+      "id": "583f9b02-bd23-453f-abce-4e260fea9adb",
+      "name": "Summarize"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many rows1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows1": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Summarize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "drunk now. Played padel and  I did drink 12 beers at bali social club"
+        }
+      }
+    ]
+  },
+  "versionId": "1ea57187-b3e8-468a-a74d-b3ccddcc6bad",
+  "versionCounter": 51,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-14T10:13:44.431Z",
+      "createdAt": "2025-11-14T10:13:44.431Z",
+      "role": "workflow:owner",
+      "workflowId": "IgPl6godZmp2eO6t",
+      "projectId": "2KiFcKNLK1JyaklJ",
+      "project": {
+        "updatedAt": "2025-07-05T04:35:03.731Z",
+        "createdAt": "2025-07-05T04:34:00.267Z",
+        "id": "2KiFcKNLK1JyaklJ",
+        "name": "peter aistralis <peterjawel@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-07-05T04:34:00.267Z",
+            "createdAt": "2025-07-05T04:34:00.267Z",
+            "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
+            "projectId": "2KiFcKNLK1JyaklJ",
+            "user": {
+              "updatedAt": "2025-11-22T00:00:12.035Z",
+              "createdAt": "2025-07-05T04:33:38.764Z",
+              "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
+              "email": "peterjawel@gmail.com",
+              "firstName": "peter",
+              "lastName": "aistralis",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-05T04:35:25.871Z",
+                "personalization_survey_n8n_version": "1.100.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "youtube"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "FAkXhJwuAslD2JDu",
+                "userActivatedAt": 1751716484498,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753381963375
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-11-21",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-07-05T05:27:25.021Z",
+      "createdAt": "2025-07-05T05:27:25.021Z",
+      "id": "94UYKbs3nzwYCJqO",
+      "name": "YouTube"
+    }
+  ]
+}
