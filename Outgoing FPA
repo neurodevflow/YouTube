@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-22T05:04:44.685Z",
+  "updatedAt": "2025-11-22T07:55:46.740Z",
   "createdAt": "2025-11-21T18:44:43.358Z",
   "id": "8JUJ0yFO4OeJqccU",
   "name": "Outgoing FPA",
@@ -8,56 +8,17 @@
   "nodes": [
     {
       "parameters": {
-        "inputSource": "passthrough"
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        -688,
-        -272
-      ],
-      "id": "f564e15c-caca-43df-be4a-d2e92054af25",
-      "name": "When Executed by Another Workflow"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "286b203e-f929-472e-a3ba-0a9637c76138",
-              "name": "Ok",
-              "value": "Ok",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -480,
-        -272
-      ],
-      "id": "5c312bb1-5a64-4934-8e1b-56c4f2d14b82",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $('When Executed by Another Workflow').item.json.query }}",
-        "hasOutputParser": true,
         "options": {
-          "systemMessage": "=You are a helpful accountant. You receive either a receipt or a natural-language text describing expenses.\n\nYour task is to analyze the input and return exactly the following JSON structure. You must **never return extra text, explanations, or fields**. Use **double quotes** for all keys and string values. Booleans must be true/false.\nThe JSON object must be the **ONLY** output. Do not include any text, newlines, or markdown fences (```json). Begin the output with `{` and end it with `}`.\n\nCRITICAL INSTRUCTIONS:\n\n1. date: string \"YYYY-MM-DD\". Use the date found in the text/receipt. If no date is mentioned, use today's date. Today's date is {{$now}}\n2. description: short string describing the expense.\n3. has_receipt: boolean, true only if the input mentions a receipt, otherwise false.\n4. payment_method: string. Default is \"cash\" unless a payment method is explicitly mentioned.\n5. **quantity** must always be a **JSON number** (e.g., 1, 2.5), **never a string**.\n6. When a string or price value is unknown, use the **literal JSON keyword `null`** (without quotes).\n\n7. items: an array of objects. Each object must have:\n    - item_name: string or null\n    - quantity: number or null\n    - unit_price: string or null (extract price as a string, e.g., \"120\" or \"120.00\")\n    - total_price: string or null (extract price as a string)\n    - location: string or null\n8. Service Item Rule: Only create a service item (e.g., \"Padel Session Fee\") when the activity is mentioned in natural language and its cost is part of the total. If the input is an itemized receipt, DO NOT create a separate general service item. List only the items explicitly found on the receipt."
+          "systemMessage": "You are a helpful assistant and you analyze the incoming message\nyou need to extract what has been bought and what the price was.\nIf you have both, you output the item and the price\nif price is missing, you output 'what was the price'\nif inout makes no sense, you output 'I dont knwo what you are saying'"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        -256,
-        -272
+        208,
+        0
       ],
-      "id": "7e84936f-feec-4307-bebd-2c997c11505e",
+      "id": "7b601e1e-fb83-45db-84e2-669b7e424a19",
       "name": "AI Agent"
     },
     {
@@ -74,10 +35,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -320,
-        -48
+        80,
+        208
       ],
-      "id": "9b713b2e-37fc-44fd-b92e-4d91e4202728",
+      "id": "abfb959c-6ff4-4535-a3f2-3e492747d97b",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
@@ -87,167 +48,118 @@
       }
     },
     {
-      "parameters": {
-        "schemaType": "manual",
-        "inputSchema": "{\n  \"name\": \"Expense\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"date\": { \"type\": \"string\" },\n    \"description\": { \"type\": \"string\" },\n    \"has_receipt\": { \"type\": \"boolean\" },\n    \"payment_method\": { \"type\": \"string\" },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_name\": { \"type\": \"string\" },\n          \"quantity\": { \"type\": \"number\" },\n          \"unit_price\": { \"type\": [\"string\", \"null\"] },\n          \"total_price\": { \"type\": [\"string\", \"null\"] },\n          \"location\": { \"type\": [\"string\", \"null\"] }\n        },\n        \"required\": [\"item\", \"quantity\", \"unit_price\", \"total_price\", \"location\"]\n      }\n    }\n  },\n  \"required\": [\"date\", \"description\", \"has_receipt\", \"payment_method\", \"items\"]\n}"
-      },
-      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        -80,
-        -64
+        224,
+        208
       ],
-      "id": "11e0aef1-06da-4155-bea9-d34fe68af6c5",
-      "name": "Structured Output Parser"
-    },
-    {
-      "parameters": {
-        "operation": "getAll",
-        "tableId": "item_categories",
-        "filters": {
-          "conditions": [
-            {
-              "keyName": "item_name",
-              "condition": "eq",
-              "keyValue": "={{ $json.item_name }}"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        848,
-        -272
-      ],
-      "id": "02c6573b-bb5d-4857-a3ef-533610b1c62a",
-      "name": "Get many rows",
-      "credentials": {
-        "supabaseApi": {
-          "id": "KZ6ufBeRCXc7olwi",
-          "name": "Supabase ZerioBox"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "fieldToSplitOut": "output.items",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitOut",
-      "typeVersion": 1,
-      "position": [
-        192,
-        -272
-      ],
-      "id": "c4da9bb8-a4e8-4442-a4cf-8616a8241525",
-      "name": "Split Out"
-    },
-    {
-      "parameters": {
-        "operation": "getAll",
-        "tableId": "knowledge_base",
-        "matchType": "allFilters",
-        "filters": {
-          "conditions": [
-            {
-              "keyName": "location",
-              "condition": "eq",
-              "keyValue": "={{ $json.location }}"
-            },
-            {
-              "keyName": "item_name",
-              "condition": "eq",
-              "keyValue": "={{ $json.item_name.toLowerCase() }}"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        560,
-        -272
-      ],
-      "id": "675c7a3d-8a09-4596-94ca-033782cb9e9e",
-      "name": "Get many rows1",
-      "credentials": {
-        "supabaseApi": {
-          "id": "KZ6ufBeRCXc7olwi",
-          "name": "Supabase ZerioBox"
-        }
-      }
+      "id": "15e67c2a-474a-47ae-ba09-3a6c1d9d317d",
+      "name": "Simple Memory"
     },
     {
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "2feeff6d-adc8-4529-bab4-078a39d18875",
-              "name": "total_price",
-              "value": "={{ (parseFloat($('Get many rows1').item.json.unit_price) || 0) * (parseFloat($('Split Out').item.json.quantity) || 0) }}\n",
-              "type": "number"
-            },
-            {
-              "id": "c340caa5-a9e4-482e-8992-3e9d5035dca5",
-              "name": "item_name",
-              "value": "={{ $json.item_name }}",
-              "type": "string"
-            },
-            {
-              "id": "d3c80b5f-c334-4d9f-b2fc-64bef76105ff",
-              "name": "subcategory",
-              "value": "={{ $json.subcategory }}",
-              "type": "string"
-            },
-            {
-              "id": "ede17fca-9b71-4c1f-a7b3-51f403e4ad93",
-              "name": "category_id",
-              "value": "={{ $json.category_id }}",
-              "type": "string"
-            },
-            {
-              "id": "ebe3e411-5961-42dc-bd38-326a5340a2fe",
-              "name": "location",
-              "value": "={{ $('Get many rows1').item.json.location }}",
-              "type": "string"
-            },
-            {
-              "id": "7fa2dce0-07cc-4428-993b-ee7ff91c9f8f",
-              "name": "item_name",
-              "value": "={{ $('Get many rows1').item.json.item_name }}",
-              "type": "string"
-            },
-            {
-              "id": "40147e72-3e39-46f2-b8f2-d63a77b7855d",
-              "name": "unit_price",
-              "value": "={{ $('Get many rows1').item.json.unit_price }}",
-              "type": "string"
-            },
-            {
-              "id": "b40f43a2-57bd-4422-a3bc-060a7f5265ee",
-              "name": "quantity",
-              "value": "={{ $('Split Out').item.json.quantity }}",
+              "id": "d3bef718-82ee-4ed8-ab4a-add4ce41cee9",
+              "name": "ttt",
+              "value": "ttt",
               "type": "string"
             }
           ]
         },
-        "options": {
-          "ignoreConversionErrors": false
-        }
+        "options": {}
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1136,
-        -272
+        560,
+        0
       ],
-      "id": "55c770bc-c26a-4cc9-abe3-057ec8aaca1d",
+      "id": "6416c499-76b5-4d25-a7aa-2d9f2ed5c70d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "461e659d-1a47-4642-a2ec-14401085cdaa",
+              "name": "output",
+              "value": "={{ $('AI Agent').item.json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        16
+      ],
+      "id": "1e07127a-fa1b-419c-be58-680ac35a4b51",
       "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "27d48895-b3cd-4fff-8475-6959e2f30b5a",
+      "name": "Telegram Trigger",
+      "webhookId": "e3c4e862-dde0-4756-8fcf-845836f2de3f"
+    },
+    {
+      "parameters": {
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        992,
+        16
+      ],
+      "id": "90a691d1-8951-4be2-b2a1-0500f8a5f663",
+      "name": "Send a text message",
+      "webhookId": "29b40e34-83f3-4b44-a9b7-e0868467e09f"
     }
   ],
   "connections": {
-    "When Executed by Another Workflow": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
       "main": [
         [
           {
@@ -262,50 +174,6 @@
       "main": [
         [
           {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Split Out",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Structured Output Parser": {
-      "ai_outputParser": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get many rows": {
-      "main": [
-        [
-          {
             "node": "Edit Fields1",
             "type": "main",
             "index": 0
@@ -313,22 +181,11 @@
         ]
       ]
     },
-    "Split Out": {
+    "Telegram Trigger": {
       "main": [
         [
           {
-            "node": "Get many rows1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get many rows1": {
-      "main": [
-        [
-          {
-            "node": "Get many rows",
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
@@ -339,7 +196,7 @@
       "main": [
         [
           {
-            "node": "Split Out",
+            "node": "Send a text message",
             "type": "main",
             "index": 0
           }
@@ -351,18 +208,12 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
-  "pinData": {
-    "When Executed by Another Workflow": [
-      {
-        "json": {
-          "query": "4 beers in Bali Social Club and played padel over there"
-        }
-      }
-    ]
+  "meta": {
+    "templateCredsSetupCompleted": true
   },
-  "versionId": "c17e20c3-5368-4cbf-9319-e1f990be57ec",
-  "versionCounter": 3,
+  "pinData": {},
+  "versionId": "eb86c830-00eb-4d74-8db1-d721e67019e9",
+  "versionCounter": 5,
   "triggerCount": 0,
   "shared": [
     {
@@ -386,7 +237,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-22T00:00:12.035Z",
+              "updatedAt": "2025-11-23T00:00:25.254Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -413,7 +264,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-21",
+              "lastActiveAt": "2025-11-22",
               "isPending": false
             }
           }
