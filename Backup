@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-23T09:36:42.340Z",
+  "updatedAt": "2025-11-24T01:50:39.878Z",
   "createdAt": "2025-07-05T05:27:31.126Z",
   "id": "2wGj4UwRo2mb42YJ",
   "name": "Backup",
@@ -1247,23 +1247,23 @@
     "Schedule Trigger": [
       {
         "json": {
-          "timestamp": "2025-11-23T01:00:25.012+01:00",
-          "Readable date": "November 23rd 2025, 1:00:25 am",
-          "Readable time": "1:00:25 am",
-          "Day of week": "Sunday",
+          "timestamp": "2025-11-24T01:00:02.048+01:00",
+          "Readable date": "November 24th 2025, 1:00:02 am",
+          "Readable time": "1:00:02 am",
+          "Day of week": "Monday",
           "Year": "2025",
           "Month": "November",
-          "Day of month": "23",
+          "Day of month": "24",
           "Hour": "01",
           "Minute": "00",
-          "Second": "25",
+          "Second": "02",
           "Timezone": "Europe/Berlin (UTC+01:00)"
         }
       }
     ]
   },
-  "versionId": "2fa8e4a5-abfb-46b5-90c9-4f49dc0e9915",
-  "versionCounter": 17,
+  "versionId": "a1a6d0b8-da71-48c4-9a19-3888e430615d",
+  "versionCounter": 20,
   "triggerCount": 1,
   "shared": [
     {
@@ -1287,7 +1287,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-23T00:00:25.254Z",
+              "updatedAt": "2025-11-24T00:00:03.564Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -1314,7 +1314,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-22",
+              "lastActiveAt": "2025-11-23",
               "isPending": false
             }
           }
