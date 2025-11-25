@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-24T01:51:59.368Z",
+  "updatedAt": "2025-11-24T09:12:41.528Z",
   "createdAt": "2025-07-05T05:27:31.126Z",
   "id": "2wGj4UwRo2mb42YJ",
   "name": "Backup",
@@ -1233,7 +1233,10 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "4a7YZEPYkxQyF3OH"
   },
   "staticData": {
     "node:Schedule Trigger": {
@@ -1262,8 +1265,8 @@
       }
     ]
   },
-  "versionId": "281e0200-2a2d-498a-b869-9179e53f4844",
-  "versionCounter": 22,
+  "versionId": "775199b2-b4ac-4fb8-83cf-5325d74928c0",
+  "versionCounter": 27,
   "triggerCount": 1,
   "shared": [
     {
@@ -1287,7 +1290,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-24T00:00:03.564Z",
+              "updatedAt": "2025-11-25T00:00:55.332Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -1314,7 +1317,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-23",
+              "lastActiveAt": "2025-11-24",
               "isPending": false
             }
           }
