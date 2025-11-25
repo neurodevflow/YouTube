@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-22T06:02:37.782Z",
+  "updatedAt": "2025-11-24T10:49:00.178Z",
   "createdAt": "2025-11-14T10:13:44.431Z",
   "id": "IgPl6godZmp2eO6t",
   "name": "Incoming_PFA",
@@ -13,8 +13,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -656,
-        -144
+        -624,
+        -368
       ],
       "id": "9ff434c6-c179-4802-a21f-55f1df2fd9e9",
       "name": "When Executed by Another Workflow"
@@ -94,7 +94,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        544,
+        960,
         -80
       ],
       "id": "cfe30351-a0ca-4331-a6bc-96ace0b482d7",
@@ -232,7 +232,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        768,
+        1184,
         -80
       ],
       "id": "1ba34314-8597-41c9-995d-5651cc8c9c18",
@@ -246,7 +246,7 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        336,
+        752,
         -304
       ],
       "id": "6e8d56cd-1c00-42a7-8ac5-2192709dbc3a",
@@ -260,7 +260,7 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        544,
+        960,
         -304
       ],
       "id": "f65a050a-5c91-4baa-a018-aa80623b5a18",
@@ -281,11 +281,102 @@
       "type": "n8n-nodes-base.summarize",
       "typeVersion": 1.1,
       "position": [
-        768,
+        1184,
         -304
       ],
       "id": "583f9b02-bd23-453f-abce-4e260fea9adb",
       "name": "Summarize"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5935f8a5-a0be-45b8-90d0-57edcb9c5c7e",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        544,
+        -80
+      ],
+      "id": "8e65a400-eba8-49a9-aa24-6e844948a402",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "93266b52-1925-4a74-802c-527f5fe49288",
+              "name": "ask",
+              "value": "=how much did you pay for {{ $json.item_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1024,
+        112
+      ],
+      "id": "ba5c1dfb-109f-420c-bfa0-1b30e407ef6f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "da7a7b83-698c-46c3-a45e-cf929d3316b2",
+              "leftValue": "={{ $('Loop Over Items').item.json.unit_price }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        16
+      ],
+      "id": "48e3910d-9a8f-413c-b4a2-4e60c13dcad8",
+      "name": "If1"
     }
   ],
   "connections": {
@@ -377,7 +468,7 @@
       "main": [
         [
           {
-            "node": "Get many rows",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -416,6 +507,36 @@
           }
         ]
       ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -429,13 +550,13 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "query": "I did drink 4 beers at Padel Pererenan and then I went to Bali Social Club and played padel over there"
+          "query": "4 colas in Bali Social Club, 120000"
         }
       }
     ]
   },
-  "versionId": "8a9200a5-97f1-408a-86b9-451581af202e",
-  "versionCounter": 54,
+  "versionId": "90822ae5-792c-4b69-8575-14b63ee7b2a5",
+  "versionCounter": 58,
   "triggerCount": 0,
   "shared": [
     {
@@ -459,7 +580,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-23T00:00:25.254Z",
+              "updatedAt": "2025-11-25T00:00:55.332Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -486,7 +607,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-22",
+              "lastActiveAt": "2025-11-24",
               "isPending": false
             }
           }
