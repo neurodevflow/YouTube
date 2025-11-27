@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-25T04:25:51.984Z",
+  "updatedAt": "2025-11-26T06:29:33.023Z",
   "createdAt": "2025-07-05T05:27:31.126Z",
   "id": "2wGj4UwRo2mb42YJ",
   "name": "Backup",
@@ -1236,7 +1236,7 @@
     "executionOrder": "v1",
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false,
-    "errorWorkflow": "4a7YZEPYkxQyF3OH"
+    "errorWorkflow": "r1hEZ8InOj91e2BD"
   },
   "staticData": {
     "node:Schedule Trigger": {
@@ -1250,23 +1250,23 @@
     "Schedule Trigger": [
       {
         "json": {
-          "timestamp": "2025-11-25T01:00:55.013+01:00",
-          "Readable date": "November 25th 2025, 1:00:55 am",
-          "Readable time": "1:00:55 am",
-          "Day of week": "Tuesday",
+          "timestamp": "2025-11-26T01:00:58.009+01:00",
+          "Readable date": "November 26th 2025, 1:00:58 am",
+          "Readable time": "1:00:58 am",
+          "Day of week": "Wednesday",
           "Year": "2025",
           "Month": "November",
-          "Day of month": "25",
+          "Day of month": "26",
           "Hour": "01",
           "Minute": "00",
-          "Second": "55",
+          "Second": "58",
           "Timezone": "Europe/Berlin (UTC+01:00)"
         }
       }
     ]
   },
-  "versionId": "b2d7a548-2538-45cd-976a-7244b490096e",
-  "versionCounter": 30,
+  "versionId": "7c7f1064-ba75-4199-86fe-f65e92f9476f",
+  "versionCounter": 35,
   "triggerCount": 1,
   "shared": [
     {
@@ -1290,7 +1290,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-26T00:00:58.347Z",
+              "updatedAt": "2025-11-27T00:00:39.309Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -1317,7 +1317,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-25",
+              "lastActiveAt": "2025-11-26",
               "isPending": false
             }
           }
