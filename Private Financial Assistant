@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2025-11-24T16:35:13.270Z",
+  "updatedAt": "2025-11-26T13:30:00.938Z",
   "createdAt": "2025-11-14T10:10:30.304Z",
   "id": "szUDREfsQyI0SRBC",
   "name": "Private Financial Assistant",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -45,7 +45,7 @@
         "promptType": "define",
         "text": "={{ $json.question }}",
         "options": {
-          "systemMessage": "You are a helpful assistant and you analyze the incoming message.\n2 options: a request to update/delete/write to the database\nor a request to get information from the database.\nAnd you call the right tool\n\nIMPORTANT RULES:\n1. You MUST NOT split user input into multiple tool calls.\n2. Always call exactly ONE tool per user message.\n3. Forward the raw user message exactly as received.\n4. Do not interpret or break it into multiple events.\n5. Only the tool's workflow will perform any analysis.\n"
+          "systemMessage": "You are a helpful assistant and you analyze the incoming message.\n2 options: a request to update/delete/write to the database\nor a request to get information from the database.\nAnd you call the right tool\n\nIMPORTANT RULES:\n1. You MUST NOT split user input into multiple tool calls.\n2. Always call exactly ONE tool per user message.\n3. Forward the raw user message exactly as received.\n4. Do not interpret or break it into multiple events.\n5. Only the tool's workflow will perform any analysis.\n\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -166,17 +166,6 @@
           "name": "Telegram account"
         }
       }
-    },
-    {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.toolThink",
-      "typeVersion": 1.1,
-      "position": [
-        192,
-        256
-      ],
-      "id": "f5141b86-760b-4359-85cf-0e9a0302ff0f",
-      "name": "Think"
     }
   ],
   "connections": {
@@ -255,17 +244,6 @@
       "main": [
         []
       ]
-    },
-    "Think": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
   "settings": {
@@ -279,9 +257,9 @@
     "Telegram Trigger": [
       {
         "json": {
-          "update_id": 181780392,
+          "update_id": 181780530,
           "message": {
-            "message_id": 2328,
+            "message_id": 2587,
             "from": {
               "id": 2034253630,
               "is_bot": false,
@@ -297,15 +275,15 @@
               "username": "peter_aurelius",
               "type": "private"
             },
-            "date": 1763979377,
-            "text": "4 beers in Pererenan"
+            "date": 1764162737,
+            "text": "123"
           }
         }
       }
     ]
   },
-  "versionId": "a3ed9d60-94b3-43db-be14-c2e768647733",
-  "versionCounter": 37,
+  "versionId": "c00e1937-9049-4e1a-b8d4-40b3c132f399",
+  "versionCounter": 54,
   "triggerCount": 1,
   "shared": [
     {
@@ -329,7 +307,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-26T00:00:58.347Z",
+              "updatedAt": "2025-11-27T00:00:39.309Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -356,7 +334,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-25",
+              "lastActiveAt": "2025-11-26",
               "isPending": false
             }
           }
