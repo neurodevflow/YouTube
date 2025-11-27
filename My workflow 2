@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-25T08:05:43.797Z",
+  "updatedAt": "2025-11-26T06:28:49.006Z",
   "createdAt": "2025-11-25T03:47:13.387Z",
   "id": "ob0wQC6ogWLN5iHi",
   "name": "My workflow 2",
@@ -135,7 +135,7 @@
     ]
   },
   "versionId": "aa055803-e619-4354-9a1e-b1fec0e7d999",
-  "versionCounter": 37,
+  "versionCounter": 40,
   "triggerCount": 1,
   "shared": [
     {
@@ -159,7 +159,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-26T00:00:58.347Z",
+              "updatedAt": "2025-11-27T00:00:39.309Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -186,7 +186,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-25",
+              "lastActiveAt": "2025-11-26",
               "isPending": false
             }
           }
