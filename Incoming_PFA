@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-28T18:11:12.743Z",
+  "updatedAt": "2025-11-29T10:36:29.788Z",
   "createdAt": "2025-11-14T10:13:44.431Z",
   "id": "IgPl6godZmp2eO6t",
   "name": "Incoming_PFA",
@@ -23,10 +23,10 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.query }}",
+        "text": "={{ $json.query || $json.message.text }}",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "=You are a strict accountant AI. You receive either:\n- a natural-language description of expenses, or\n- a receipt text.\n\nYour ONLY task is to produce a JSON object that exactly matches this schema:\n\n{\n  \"date\": \"string\",\n  \"description\": \"string\",\n  \"has_receipt\": \"boolean\",\n  \"payment_method\": \"string\",\n  \"items\": [\n    {\n      \"item_name\": \"string or null\",\n      \"quantity\": \"number or null\",\n      \"unit_price\": \"string or null\",\n      \"total_price\": \"string or null\",\n      \"location\": \"string or null\"\n    }\n  ]\n}\n\nCRITICAL RULES (follow exactly):\n\nNormalization rules (VERY IMPORTANT):\nAlways convert item names to their base canonical form.\nUse these equivalence rules:\n\nAny phrase that includes “marlboro”, “pack of marlboro”, “cigarettes”, “cigs” → item_name = \"marlboro\"\n\nAny phrase that includes “beer”, “glass of beer”, “bintang”, “draught beer” → item_name = \"beer\"\n\nAny phrase that includes “martini”, “glass of martini”, “a martini” → item_name = \"martini\"\n\nIf a quantity is expressed indirectly (e.g., “a beer”, “1 glass of beer”), treat it as quantity = 1, unless stated otherwise.\n\n1. Output **only** a JSON object. No explanations. No markdown. No commentary.\n2. All keys must exist. Never omit a required field.\n3. Use **double quotes** for all strings.\n4. For missing values, use **null** (not \"null\").\n5. For \"quantity\", output a **number**, never a string.\n6. \"date\":\n   - If the text contains a date → extract it as \"YYYY-MM-DD\".\n   - Otherwise → use {{$now}}.\n7. \"description\": a short human description of the expense.\n8. \"has_receipt\": true only if the text explicitly mentions a receipt.\n9. \"payment_method\":\n   - If mentioned (cash/card/debit/credit/etc), use it.\n   - Otherwise: \"cash\".\n10. \"items\": always output an array.\n11. Extract every item mentioned in the text:\n    - Drinks, food, services, activities.\n12. If an item has no price → unit_price = null, total_price = null.\n13. If the place is mentioned (e.g., Bali Social Club) → set \"location\" to that string.\n14. If the text describes an activity (e.g., “played padel”) → create a service item:\n    {\n      \"item_name\": \"Padel Session Fee\",\n      \"quantity\": 1,\n      \"unit_price\": null,\n      \"total_price\": null,\n      \"location\": \"<place or null>\"\n    }\n\nYour output must start with `{` and end with `}`. No text before or after.\n"
+          "systemMessage": "=You are a strict accountant AI. You receive either:\n- a natural-language description of expenses, or\n- a receipt text.\n\nYour ONLY task is to produce a JSON object that exactly matches this schema:\n\n{\n  \"date\": \"string\",\n  \"description\": \"string\",\n  \"has_receipt\": \"boolean\",\n  \"payment_method\": \"string\",\n  \"items\": [\n    {\n      \"item_name\": \"string or null\",\n      \"quantity\": \"number or null\",\n      \"unit_price\": \"string or null\",\n      \"total_price\": \"string or null\",\n      \"location\": \"string or null\"\n    }\n  ]\n}\n\nCRITICAL RULES (follow exactly):\n\nNormalization rules (VERY IMPORTANT):\nAlways convert item names to their base canonical form.\nUse these equivalence rules:\n\nAny phrase that includes “marlboro”, “pack of marlboro”, “cigarettes”, “cigs” → item_name = \"marlboro\"\n\nAny phrase that includes “beer”, “glass of beer”, “bintang”, “draught beer” → item_name = \"beer\"\n\nAny phrase that includes “martini”, “glass of martini”, “a martini” → item_name = \"martini\"\n\nIf a quantity is expressed indirectly (e.g., “a beer”, “1 glass of beer”), treat it as quantity = 1, unless stated otherwise.\n\n1. Output **only** a JSON object. No explanations. No markdown. No commentary.\n2. All keys must exist. Never omit a required field.\n3. Use **double quotes** for all strings.\n4. For missing values, use **null** (not \"null\").\n5. For \"quantity\", output a **number**, never a string.\n6. \"date\":\n   - If the text contains a date → extract it as \"YYYY-MM-DD\".\n   - Otherwise → use {{$now}}.\n7. \"description\": a short human description of the expense.\n8. \"has_receipt\": true only if the text explicitly mentions a receipt.\n9. \"payment_method\":\n   - If mentioned (cash/card/debit/credit/etc), use it.\n   - Otherwise: \"cash\".\n10. \"items\": always output an array.\n11. Extract every item mentioned in the text:\n    - Drinks, food, services, activities.\n12. If an item has no price → unit_price = null, total_price = null.\n13. If the place is mentioned (e.g., Bali Social Club) → set \"location\" to that string.\n14. Activities:\n   Detect activities only when the text clearly refers to a place or activity that implies spending money.\n15. If the text clearly indicates spending money but does NOT mention any specific item names:\n\n   - Create ONE fallback item.\n   - Use the following logic:\n\n     If the text mentions \"drinks\", \"drinking\", etc. → item_name = \"various drinks\"\n     If the text mentions a restaurant, fast food place, cafe → item_name = \"various food\"\n     Otherwise → item_name = \"miscellaneous purchase\"\n\n   - quantity = 1\n   - unit_price = null\n   - total_price = \"<the amount mentioned>\"\n   - location = \"<the location if mentioned>\"\n\n   Use the following mapping:\n\n   - If the text contains \"padel\" → item_name = \"Padel Session Fee\"\n   - If the text contains \"amusement park\", \"theme park\", \"fun park\", \"park ticket\" → item_name = \"Amusement Park Entry Fee\"\n   - If the text contains \"gym\", \"fitness\", \"workout\" → item_name = \"Gym Session Fee\"\n   - If the text contains \"cinema\", \"movie\", \"film\" → item_name = \"Cinema Ticket\"\n   - If the text contains \"bowling\" → item_name = \"Bowling Game Fee\"\n   - If the text contains \"museum\" → item_name = \"Museum Ticket\"\n   - If the text contains \"swimming\", \"pool\" → item_name = \"Swimming Pool Entry Fee\"\n\n   If an activity does NOT match the above list → do NOT infer or create a service item.\n\n   Each activity item should follow this format:\n   {\n     \"item_name\": \"<mapped name>\",\n     \"quantity\": 1,\n     \"unit_price\": \"<price or null>\",\n     \"total_price\": \"<price or null>\",\n     \"location\": \"<place or null>\"\n   }\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -282,8 +282,8 @@
       "type": "n8n-nodes-base.summarize",
       "typeVersion": 1.1,
       "position": [
-        688,
-        -336
+        896,
+        -560
       ],
       "id": "74b1b087-57da-4d44-a285-e7921839b639",
       "name": "Summarize"
@@ -329,7 +329,7 @@
             {
               "id": "93266b52-1925-4a74-802c-527f5fe49288",
               "name": "ask",
-              "value": "=how much did you pay for one {{ $('Loop Over Items').item.json.item_name }}",
+              "value": "=What was the price for the {{ $('Loop Over Items').item.json.item_name }}",
               "type": "string"
             }
           ]
@@ -423,7 +423,7 @@
         "promptType": "define",
         "text": "={{ $('Loop Over Items').item.json.item_name }}",
         "options": {
-          "systemMessage": "You are a helpful assistant and you have to classify what the item is in.\nThe options are: drinks, sports, tobacco \nOnly output the option you have found, nothing else"
+          "systemMessage": "You are a helpful assistant and you have to classify what the item is in.\nThe options are: drinks, sports, tobacco, snacks, food, leisure, fruit\nOnly output the option you have found, nothing else"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -484,8 +484,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1136,
-        560
+        1280,
+        592
       ],
       "id": "b6319621-59c7-47e3-956e-1b2989f1ebb4",
       "name": "Create a row1",
@@ -494,7 +494,8 @@
           "id": "KZ6ufBeRCXc7olwi",
           "name": "Supabase ZerioBox"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -512,8 +513,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1328,
-        368
+        1520,
+        272
       ],
       "id": "6df503ce-a4ea-4800-b036-ba32e0af0dd2",
       "name": "Get a row",
@@ -537,19 +538,19 @@
             {
               "id": "c340caa5-a9e4-482e-8992-3e9d5035dca5",
               "name": "item_name",
-              "value": "={{ $json.item_name }}",
+              "value": "={{ $('Create a row').item.json.item_name }}",
               "type": "string"
             },
             {
               "id": "d3c80b5f-c334-4d9f-b2fc-64bef76105ff",
               "name": "subcategory",
-              "value": "={{ $json.subcategory }}",
+              "value": "={{ $('Get a row').item.json.name }}",
               "type": "string"
             },
             {
               "id": "ede17fca-9b71-4c1f-a7b3-51f403e4ad93",
               "name": "category_id",
-              "value": "={{ $json.category_id }}",
+              "value": "={{ $('Get a row').item.json.id }}",
               "type": "string"
             },
             {
@@ -561,7 +562,7 @@
             {
               "id": "7fa2dce0-07cc-4428-993b-ee7ff91c9f8f",
               "name": "item_name",
-              "value": "={{ $json.item_name }}",
+              "value": "={{ $('Create a row').item.json.item_name }}",
               "type": "string"
             },
             {
@@ -585,8 +586,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1408,
-        592
+        1552,
+        624
       ],
       "id": "6584b987-06b2-45e2-9acb-67731235f484",
       "name": "Edit Fields2"
@@ -622,24 +623,182 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        896,
-        -336
+        1088,
+        -560
       ],
       "id": "fc60fa51-d507-449a-9288-990c441c7fb2",
       "name": "Edit Fields3"
     },
     {
       "parameters": {
-        "jsCode": "for (const item of items) {\n  // 1. Safely check for query existence\n  if (item.json.query && typeof item.json.query === 'string') {\n    let query = item.json.query.toLowerCase();\n\n    // 2. REFINED CHECK: Look for the specific corrupted pattern: \n    // [1 beer] [and] [1 milkshake] [for price]\n    // The expression looks for: (quantity + word) + (and/comma) + (quantity + word) + (price at end)\n    const corruption_regex = /(\\d+\\s+\\w+)\\s+(and|,)\\s+(\\d+\\s+\\w+).*(\\d+|,|\\.)+$/i;\n\n    if (query.match(corruption_regex)) {\n      \n      // Split the string by the conjunction to isolate the corrected item\n      const parts = query.split(/and|,/);\n      \n      // Keep only the last part (the one containing the price correction)\n      const correctedItem = parts.pop().trim();\n      \n      // Set the item's query to the clean input\n      item.json.query = correctedItem;\n    }\n  }\n}\nreturn items;"
+        "tableId": "transactions",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "date",
+              "fieldValue": "={{ $('AI Agent').item.json.output.date }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $('AI Agent').item.json.output.description }}"
+            },
+            {
+              "fieldId": "total_amount",
+              "fieldValue": "={{ $('Summarize').item.json.sum_total_price }}"
+            },
+            {
+              "fieldId": "payment_method",
+              "fieldValue": "={{ $('AI Agent').item.json.output.payment_method }}"
+            }
+          ]
+        }
       },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
       "position": [
-        -464,
+        1312,
+        -560
+      ],
+      "id": "e32af50d-3ef9-4fad-b28b-13492681108a",
+      "name": "Create a row2",
+      "credentials": {
+        "supabaseApi": {
+          "id": "KZ6ufBeRCXc7olwi",
+          "name": "Supabase ZerioBox"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "transaction_items",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "transaction_id",
+              "fieldValue": "={{ $json.id }}"
+            },
+            {
+              "fieldId": "item_name",
+              "fieldValue": "={{ $json.item_name }}"
+            },
+            {
+              "fieldId": "quantity",
+              "fieldValue": "={{ $json.quantity }}"
+            },
+            {
+              "fieldId": "item_total",
+              "fieldValue": "={{ $json.unit_price }}"
+            },
+            {
+              "fieldId": "category_id",
+              "fieldValue": "={{ $json.category_id }}"
+            },
+            {
+              "fieldId": "unit_price",
+              "fieldValue": "={{ $json.unit_price }}"
+            },
+            {
+              "fieldId": "location",
+              "fieldValue": "={{ $json.location }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        -336
+      ],
+      "id": "54dec2c8-1fa7-4deb-8aec-eccd4d518f90",
+      "name": "Create a row3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "KZ6ufBeRCXc7olwi",
+          "name": "Supabase ZerioBox"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "transaction_items",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "transaction_id",
+              "fieldValue": "=14f1d734-4966-4d0e-a00e-7b2ed68936bd"
+            },
+            {
+              "fieldId": "item_name",
+              "fieldValue": "={{ $('Split Out1').item.json.item_name }}"
+            },
+            {
+              "fieldId": "quantity",
+              "fieldValue": "={{ $json.quantity }}"
+            },
+            {
+              "fieldId": "item_total",
+              "fieldValue": "={{ $json.total_price }}"
+            },
+            {
+              "fieldId": "category_id",
+              "fieldValue": "={{ $json.category_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1888,
+        16
+      ],
+      "id": "c5240921-0436-4089-bafe-6a4b42e3db72",
+      "name": "Create a row4",
+      "credentials": {
+        "supabaseApi": {
+          "id": "KZ6ufBeRCXc7olwi",
+          "name": "Supabase ZerioBox"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6cf4c478-00c4-4fa1-a4bf-c242a31492ef",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        -560
+      ],
+      "id": "668359bb-e770-404f-81ec-c49cd792e673",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1648,
         -352
       ],
-      "id": "50c2adb6-d544-4d84-9c18-be866c5f60d5",
-      "name": "Code in JavaScript"
+      "id": "fd45bcf0-157e-4dbc-bc25-ded988f72523",
+      "name": "Merge"
     }
   ],
   "connections": {
@@ -647,7 +806,7 @@
       "main": [
         [
           {
-            "node": "Code in JavaScript",
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
@@ -767,6 +926,11 @@
             "node": "Summarize",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
           }
         ]
       ]
@@ -848,6 +1012,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -895,11 +1066,54 @@
         ]
       ]
     },
-    "Code in JavaScript": {
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields3": {
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Create a row2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row3": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Create a row3",
             "type": "main",
             "index": 0
           }
@@ -918,13 +1132,13 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "query": "I did buy 2 packs of marlboro in bali social club and I paid 110000"
+          "query": "I spend 1000 on drinks in Club X"
         }
       }
     ]
   },
-  "versionId": "ac4331e1-5910-4346-bdae-5044d3f212d0",
-  "versionCounter": 160,
+  "versionId": "7dedde09-ccf7-41eb-8b9f-65f2edb4c09c",
+  "versionCounter": 179,
   "triggerCount": 0,
   "shared": [
     {
@@ -948,7 +1162,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-29T00:00:32.558Z",
+              "updatedAt": "2025-11-30T00:00:15.882Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -975,7 +1189,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-28",
+              "lastActiveAt": "2025-11-29",
               "isPending": false
             }
           }
