@@ -1,0 +1,250 @@
+{
+  "updatedAt": "2025-11-29T12:30:20.294Z",
+  "createdAt": "2025-11-29T10:39:21.513Z",
+  "id": "XQIdg6eU1ro02cH4",
+  "name": "Retrieval_PFA",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1103b150-aeeb-4b67-b21b-c1e0ceaa5ea1",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5400ac1-1530-46d1-a2d5-e825843dd238",
+              "name": "response",
+              "value": "=this is the sql-statement you need: \"{{ $json.output }}\"",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "e0365c56-2b6c-4c8d-adff-f17f154c52f4",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=You are an expert PostgreSQL Query Generator.\nYour SOLE and ONLY task is to translate the user's question into a single, valid, and fully functional PostgreSQL SELECT statement.\n\n### 1. Database Schema\n### 1. Database Schema\nUse ONLY the following tables and columns. DO NOT reference any tables or columns not listed here.\n\n- transactions (t):\n  id, date, description, total_amount, payment_method, created_at\n\n- transaction_items (ti):\n  id, item_name, location, quantity, item_total, unit_price, transaction_id, category_id\n\n- categories (c):\n  id, name, type, budget_amount, parent_category_id\n\n- item_categories (ic):\n  id, item_keyword, subcategory, category_id\n\n- knowledge_base (kb):\n  id, location, type, item_name, unit_price\n\n### 2. Output and Constraints\n1.  **Output:** Provide **ONLY** the raw SQL query text. NO surrounding markdown (\\`\\`\\`), NO explanations, NO blank lines, NO introductory phrases.\n2.  **Date Handling:** The current date is **'2025-11-29'**. Use `CURRENT_DATE - INTERVAL 'X'` syntax for relative dates.\n3.  **Aggregation:** All sums must be wrapped in `COALESCE(ROUND(SUM(...) ::numeric, 2), 0.00)` to handle zero results and format currency.\n4.  **Amounts:** For general spending queries (like 'how much did I spend'), use `t.total_amount` from the `transactions` table. Amounts are already currency values (no division by 100).\n5.  **Item Search:** When searching for specific items (like 'beers'), use the `transaction_items` table.\n6.  **Error Handling:** If necessary information is missing for an exact numeric answer, \ninfer partial information using the schema. \nDo NOT output an error unless the required table truly does not exist.\n7. General spending queries (e.g., \"how much did I spend\", \"total spent\", \"what did I spend yesterday\") MUST be answered using ONLY the transactions table. These queries NEVER require transaction_items, categories, or item_categories. They are always fulfillable.\n\n### 3. User Question\n{{ $json.query }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "d5c5b30d-902e-465b-a099-cd1ad4750549",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        208
+      ],
+      "id": "7fc2e74f-6e27-49a3-8782-1da54ae2c452",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "TVzP9p8nOtsqZFLa",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ymimorntpqzxaukdnyzi.supabase.co/rest/v1/xxx1",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InltaW1vcm50cHF6eGF1a2RueXppIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTAwNTE4NCwiZXhwIjoyMDcwNTgxMTg0fQ.vNdVsu_rSGMFcwQbcZdZYiAcJPFRQaKiRPLNocwGwdI"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InltaW1vcm50cHF6eGF1a2RueXppIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTAwNTE4NCwiZXhwIjoyMDcwNTgxMTg0fQ.vNdVsu_rSGMFcwQbcZdZYiAcJPFRQaKiRPLNocwGwdI"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "embedding",
+              "value": "={{ $json.embedding }}"
+            },
+            {
+              "name": "content",
+              "value": "={{ $('Edit Fields').item.json.tekst }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        768,
+        240
+      ],
+      "id": "c41720b3-c6fc-4fe4-9d0b-73e1c5aa380c",
+      "name": "HTTP Request6"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "how much have I spent today?"
+        }
+      }
+    ]
+  },
+  "versionId": "079982ed-cd07-4594-96e2-331f404f4d72",
+  "versionCounter": 10,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-29T10:39:21.513Z",
+      "createdAt": "2025-11-29T10:39:21.513Z",
+      "role": "workflow:owner",
+      "workflowId": "XQIdg6eU1ro02cH4",
+      "projectId": "2KiFcKNLK1JyaklJ",
+      "project": {
+        "updatedAt": "2025-07-05T04:35:03.731Z",
+        "createdAt": "2025-07-05T04:34:00.267Z",
+        "id": "2KiFcKNLK1JyaklJ",
+        "name": "peter aistralis <peterjawel@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-07-05T04:34:00.267Z",
+            "createdAt": "2025-07-05T04:34:00.267Z",
+            "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
+            "projectId": "2KiFcKNLK1JyaklJ",
+            "user": {
+              "updatedAt": "2025-11-30T00:00:15.882Z",
+              "createdAt": "2025-07-05T04:33:38.764Z",
+              "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
+              "email": "peterjawel@gmail.com",
+              "firstName": "peter",
+              "lastName": "aistralis",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-05T04:35:25.871Z",
+                "personalization_survey_n8n_version": "1.100.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "youtube"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "FAkXhJwuAslD2JDu",
+                "userActivatedAt": 1751716484498,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753381963375
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-11-29",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-07-05T05:27:25.021Z",
+      "createdAt": "2025-07-05T05:27:25.021Z",
+      "id": "94UYKbs3nzwYCJqO",
+      "name": "YouTube"
+    }
+  ]
+}
