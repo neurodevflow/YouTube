@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-28T18:30:40.985Z",
+  "updatedAt": "2025-11-29T06:32:09.148Z",
   "createdAt": "2025-11-28T18:30:32.535Z",
   "id": "CArW88ygGAe4TV4a",
   "name": "Telegram Human in the Loop",
@@ -22,437 +22,19 @@
         64
       ],
       "webhookId": "telegram-product-bot",
-      "id": "1a52ce80-2d4e-4679-9cac-9bcfe9a938af"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict"
-          },
-          "conditions": [
-            {
-              "id": "is_number_only",
-              "leftValue": "={{ $json.message.text }}",
-              "rightValue": "^\\s*\\d+(\\.\\d+)?\\s*$",
-              "operator": {
-                "type": "string",
-                "operation": "regex",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "name": "Is Number Only?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        -1424,
-        64
-      ],
-      "id": "9d1c3944-d34d-492d-8818-0f5072ae1987"
-    },
-    {
-      "parameters": {
-        "operation": "get",
-        "key": "=telegram_session_{{$json.message.chat.id}}",
-        "options": {}
-      },
-      "name": "Get Session (Price Flow)",
-      "type": "n8n-nodes-base.redis",
-      "typeVersion": 1,
-      "position": [
-        -1200,
-        -48
-      ],
-      "alwaysOutputData": true,
-      "id": "50999516-47ca-4811-9065-a65b14e7a73d",
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "// DIRECT PRICE ANSWER - NO AGENT, NO MEMORY, NO TOOLS\nconst sessionData = JSON.parse($input.item.json.value);\nconst userMessage = $('Telegram Trigger').item.json.message.text;\nconst chatId = $('Telegram Trigger').item.json.message.chat.id;\n\n// Parse the price\nconst price = parseFloat(userMessage.trim());\n\n// Get current unknown product\nconst currentIndex = sessionData.currentAskingIndex;\nconst currentProduct = sessionData.unknownProducts[currentIndex];\n\n// Update the product with the price\nsessionData.products = sessionData.products.map(p => {\n  if (p.name === currentProduct.name) {\n    return { ...p, price: price };\n  }\n  return p;\n});\n\n// Store the price\nsessionData.pendingPrices[currentProduct.name] = price;\n\n// Move to next unknown product\nsessionData.currentAskingIndex++;\nsessionData.chatId = chatId;\n\nreturn { json: sessionData };"
-      },
-      "name": "Store Price (Fast Path)",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -976,
-        -48
-      ],
-      "id": "f04e8de0-62d7-4d7c-9d57-6a93a87aea80"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict"
-          },
-          "conditions": [
-            {
-              "id": "more_prices_needed",
-              "leftValue": "={{ $json.currentAskingIndex }}",
-              "rightValue": "={{ $json.unknownProducts.length }}",
-              "operator": {
-                "type": "number",
-                "operation": "smaller"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "name": "More Prices Needed?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        -752,
-        -48
-      ],
-      "id": "d59ef970-129a-42a4-bc6a-d2ced0c1814a"
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $json.chatId }}",
-        "text": "=💰 What is the price for: *{{ $json.unknownProducts[$json.currentAskingIndex].name }}*?",
-        "replyMarkup": "inlineKeyboard",
-        "additionalFields": {
-          "parse_mode": "Markdown"
+      "id": "1a52ce80-2d4e-4679-9cac-9bcfe9a938af",
+      "credentials": {
+        "telegramApi": {
+          "id": "P9DL7o9ahJ273F89",
+          "name": "Telegram account"
         }
-      },
-      "name": "Ask Next Price",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
-      "position": [
-        -544,
-        -144
-      ],
-      "id": "805c5973-66d1-44f9-b69e-0926ccadfd17",
-      "webhookId": "1cd3385d-53c2-46d4-a46b-0255a68e2f3a"
-    },
-    {
-      "parameters": {
-        "operation": "set",
-        "key": "=telegram_session_{{$json.chatId}}",
-        "value": "={{ JSON.stringify($json) }}"
-      },
-      "name": "Update Session",
-      "type": "n8n-nodes-base.redis",
-      "typeVersion": 1,
-      "position": [
-        -320,
-        -144
-      ],
-      "id": "5dd10b7d-6670-41f1-8f4f-2c8b130bde7a"
-    },
-    {
-      "parameters": {
-        "jsCode": "// CALCULATE FINAL TOTAL - RETURN IMMEDIATELY\nconst data = $input.item.json;\nlet total = 0;\n\n// Sum all product prices\ndata.products.forEach(p => {\n  if (p.price !== null && p.price !== undefined) {\n    total += p.price;\n  }\n});\n\n// Create summary message\nlet summary = \"📊 *PRODUCT PRICE SUMMARY*\\n\";\nsummary += \"━━━━━━━━━━━━━━━━━━━━\\n\\n\";\n\ndata.products.forEach(p => {\n  summary += `${p.position}. ${p.name}: $${p.price.toFixed(2)}\\n`;\n});\n\nsummary += \"\\n━━━━━━━━━━━━━━━━━━━━\\n\";\nsummary += `*TOTAL: $${total.toFixed(2)}*`;\n\nreturn {\n  json: {\n    chatId: data.chatId,\n    summary: summary,\n    total: total\n  }\n};"
-      },
-      "name": "Calculate Total",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -544,
-        64
-      ],
-      "id": "3876cb6a-af94-45e1-8b23-cd950c700450"
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $json.chatId }}",
-        "text": "={{ $json.summary }}",
-        "replyMarkup": "inlineKeyboard",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
-      },
-      "name": "Send Total",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
-      "position": [
-        -320,
-        64
-      ],
-      "id": "de872fd8-0cf8-4190-ad94-0ee3eafc286c",
-      "webhookId": "20daf1a2-2570-4eeb-8739-0d58bae507ae"
-    },
-    {
-      "parameters": {
-        "operation": "delete",
-        "key": "=telegram_session_{{$json.chatId}}"
-      },
-      "name": "Clear Session",
-      "type": "n8n-nodes-base.redis",
-      "typeVersion": 1,
-      "position": [
-        -96,
-        64
-      ],
-      "id": "e79a49a2-f033-4770-8703-bee241edaed2"
-    },
-    {
-      "parameters": {
-        "jsCode": "// NORMAL FLOW - Parse Product List\nconst message = $('Telegram Trigger').item.json.message.text;\nconst chatId = $('Telegram Trigger').item.json.message.chat.id;\n\n// Split message into lines\nconst lines = message.split('\\n').filter(line => line.trim());\n\nconst products = [];\nconst unknownProducts = [];\n\nlines.forEach((line, index) => {\n  // Parse line - format: \"ProductName: $price\" or \"ProductName: ?\"\n  const match = line.match(/^(.+?):\\s*(.+)$/);\n  \n  if (match) {\n    const productName = match[1].trim();\n    const priceStr = match[2].trim();\n    \n    // Check if price is unknown\n    if (priceStr === '?' || priceStr === '??' || priceStr.toLowerCase() === 'unknown' || priceStr === '') {\n      products.push({\n        name: productName,\n        price: null,\n        position: index + 1\n      });\n      unknownProducts.push({\n        name: productName,\n        position: index + 1\n      });\n    } else {\n      // Parse the price\n      const price = parseFloat(priceStr.replace(/[^0-9.]/g, ''));\n      if (!isNaN(price)) {\n        products.push({\n          name: productName,\n          price: price,\n          position: index + 1\n        });\n      }\n    }\n  }\n});\n\nif (products.length === 0) {\n  return {\n    json: {\n      error: true,\n      chatId: chatId,\n      message: \"Please send a valid product list in the format:\\nProduct A: $100\\nProduct B: ?\\nProduct C: $50\"\n    }\n  };\n}\n\nreturn {\n  json: {\n    chatId: chatId,\n    products: products,\n    unknownProducts: unknownProducts,\n    pendingPrices: {},\n    currentAskingIndex: 0\n  }\n};"
-      },
-      "name": "Parse Product List",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1200,
-        160
-      ],
-      "id": "2c3ff45b-baad-4c4e-9ad0-ac61d1677673"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict"
-          },
-          "conditions": [
-            {
-              "id": "has_unknown",
-              "leftValue": "={{ $json.unknownProducts.length }}",
-              "rightValue": "0",
-              "operator": {
-                "type": "number",
-                "operation": "larger"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "name": "Has Unknown Prices?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        -976,
-        160
-      ],
-      "id": "c9899b25-223c-4935-aa57-362601b4a1e5"
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $json.chatId }}",
-        "text": "=💰 What is the price for: *{{ $json.unknownProducts[0].name }}*?",
-        "replyMarkup": "inlineKeyboard",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
-      },
-      "name": "Ask First Price",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
-      "position": [
-        -752,
-        256
-      ],
-      "id": "5f1fd944-9ea4-414a-9300-e3d1a409055f",
-      "webhookId": "c2d6161b-767c-4971-aa46-b1e52927826d"
-    },
-    {
-      "parameters": {
-        "operation": "set",
-        "key": "=telegram_session_{{$json.chatId}}",
-        "value": "={{ JSON.stringify($json) }}"
-      },
-      "name": "Create Session",
-      "type": "n8n-nodes-base.redis",
-      "typeVersion": 1,
-      "position": [
-        -544,
-        256
-      ],
-      "id": "8a67c559-debe-4518-96aa-1ca73d1ca31b"
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $json.chatId }}",
-        "text": "={{ $json.message }}",
-        "replyMarkup": "inlineKeyboard",
-        "additionalFields": {}
-      },
-      "name": "Send Error",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
-      "position": [
-        -752,
-        464
-      ],
-      "id": "ae66da43-6e60-482e-a00c-2212cf1cc7bd",
-      "webhookId": "e2af83b5-0c7b-4601-925e-1a9fdcec833d"
-    },
-    {
-      "parameters": {
-        "content": "## SMART ROUTING:\n\n**Number Only (Regex Match)**\n↓\n**FAST PATH:**\n- No Agent\n- No Memory\n- No Tool Routing\n- No Loops\n- Direct to Store Price\n- Return Result Immediately\n\n**Product List**\n↓\n**NORMAL PATH:**\n- Parse Products\n- Create Session\n- Ask Questions",
-        "height": 464.79513888888914,
-        "width": 345.6354166666667,
-        "color": 4
-      },
-      "name": "Sticky Note",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -1632,
-        320
-      ],
-      "id": "f31d7d23-2b7d-4e0a-9138-26d4c9244ab7"
+      }
     }
   ],
   "connections": {
     "Telegram Trigger": {
       "main": [
-        [
-          {
-            "node": "Is Number Only?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Is Number Only?": {
-      "main": [
-        [
-          {
-            "node": "Get Session (Price Flow)",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Parse Product List",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Session (Price Flow)": {
-      "main": [
-        [
-          {
-            "node": "Store Price (Fast Path)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Store Price (Fast Path)": {
-      "main": [
-        [
-          {
-            "node": "More Prices Needed?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "More Prices Needed?": {
-      "main": [
-        [
-          {
-            "node": "Ask Next Price",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Calculate Total",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Ask Next Price": {
-      "main": [
-        [
-          {
-            "node": "Update Session",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Calculate Total": {
-      "main": [
-        [
-          {
-            "node": "Send Total",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send Total": {
-      "main": [
-        [
-          {
-            "node": "Clear Session",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Parse Product List": {
-      "main": [
-        [
-          {
-            "node": "Has Unknown Prices?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Has Unknown Prices?": {
-      "main": [
-        [
-          {
-            "node": "Ask First Price",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Calculate Total",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Ask First Price": {
-      "main": [
-        [
-          {
-            "node": "Create Session",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     }
   },
@@ -464,8 +46,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "6a72755c-bbe3-4114-a3df-714b3a5c6050",
-  "versionCounter": 2,
+  "versionId": "a3afcdc0-08f7-498e-8074-f0f8f8dcacb7",
+  "versionCounter": 3,
   "triggerCount": 0,
   "shared": [
     {
@@ -489,7 +71,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-29T00:00:32.558Z",
+              "updatedAt": "2025-11-30T00:00:15.882Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -516,7 +98,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-28",
+              "lastActiveAt": "2025-11-29",
               "isPending": false
             }
           }
