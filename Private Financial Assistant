@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-29T12:24:18.572Z",
+  "updatedAt": "2025-11-30T14:20:01.215Z",
   "createdAt": "2025-11-14T10:10:30.304Z",
   "id": "szUDREfsQyI0SRBC",
   "name": "Private Financial Assistant",
@@ -35,7 +35,7 @@
         "promptType": "define",
         "text": "={{ $json.question }}",
         "options": {
-          "systemMessage": "You are a routing classifier. Your ONLY job is to choose between two tools:\n1) incoming_write_tool  → for CREATE/UPDATE/DELETE\n2) retrieval_tool       → for reading/querying data\n\nRULES:\n- Output EXACTLY one tool call.\n- Forward the user message EXACTLY as received.\n- NEVER produce a normal assistant response.\n- NEVER split the message.\n\nDETECTION LOGIC:\n\nA. WRITE REQUESTS (use incoming_write_tool) ONLY IF:\n   - The user’s message is a pure instruction to store or modify data.\n     Examples:\n       “add this transaction”\n       “log that I spent 20 euros”\n       “update my budget to 10000”\n       “delete the transaction from yesterday”\n   - The message does NOT contain any question.\n   - The message’s primary purpose is clearly to store data.\n\nB. READ REQUESTS (use retrieval_tool):\n   - ANY message containing a question mark “?” ALWAYS counts as a read request.\n   - ANY message starting with “how”, “what”, “when”, “where”, “who”, “which”, \n     “how much”, “how many”, “show me”, “tell me”, “give me”, counts as a read request.\n   - If the user mentions facts (numbers, budgets, amounts, context) \n     BUT ALSO asks a question afterward → ALWAYS treat it as a READ.\n\n   Examples (these MUST be retrieval requests):\n     “my budget for today is 10000, how much more can I spend?”\n     “I spent 2000 yesterday, what’s my total for this week?”\n     “I bought beer earlier. How much did I spend on drinks overall?”\n     “2 days ago I spent 15000 at Starbucks. What category is that?”\n\nC. PRIORITY RULE (critical):\n   - If a message contains ANY question, even if the rest looks like data,\n     ALWAYS classify as retrieval_tool.\n\nD. Only classify as WRITE if:\n   - The message has NO question AND\n   - The ONLY possible intention is writing/updating.\n\n"
+          "systemMessage": "=Your job is to:\n\nRoute the user's message to the correct tool.\n\nWhen you receive a tool result:\n\nIf it comes from the Write tool → output exactly what the tool returned.\n\nIf it comes from the Retrieval tool → interpret the tool result and create the best possible natural-language answer.\n\nRULES:\n\nALWAYS call exactly one tool per user message.\n\nForward the raw user text exactly as received to the tool.\n\nDO NOT add instructions or modify the forwarded text.\n\nResponse rules:\n\nWrite tool → return raw output\n\nRetrieval tool → generate a helpful, natural-language answer based on the tool output"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -139,7 +139,9 @@
       "parameters": {
         "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
         "text": "={{ $json.output }}",
-        "additionalFields": {}
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -180,6 +182,23 @@
       ],
       "id": "58f1083e-a54a-4552-a058-5c5e43070028",
       "name": "Call 'Retrieval_PFA'"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.question }}",
+        "options": {
+          "systemMessage": "SPECIAL OUTPUT RULE:\nIf the tool you call returns a result (JSON or text), you MUST return that result directly to the user.\nYou must NOT forward the original user message in this case.\n\nYou are a routing classifier. Your ONLY job is to choose between two tools:\n1) incoming_write_tool  → for CREATE/UPDATE/DELETE\n2) retrieval_tool       → for reading/querying data\n\nRULES:\n- Output EXACTLY one tool call.\n- Forward the user message EXACTLY as received.\n- NEVER produce a normal assistant response.\n- NEVER split the message.\n\nDETECTION LOGIC:\n\nA. WRITE REQUESTS (use incoming_write_tool) ONLY IF:\n   - The user’s message is a pure instruction to store or modify data.\n     Examples:\n       “add this transaction”\n       “log that I spent 20 euros”\n       “update my budget to 10000”\n       “delete the transaction from yesterday”\n   - The message does NOT contain any question.\n   - The message’s primary purpose is clearly to store data.\n\nB. READ REQUESTS (use retrieval_tool):\n   - ANY message containing a question mark “?” ALWAYS counts as a read request.\n   - ANY message starting with “how”, “what”, “when”, “where”, “who”, “which”, \n     “how much”, “how many”, “show me”, “tell me”, “give me”, counts as a read request.\n   - If the user mentions facts (numbers, budgets, amounts, context) \n     BUT ALSO asks a question afterward → ALWAYS treat it as a READ.\n\n   Examples (these MUST be retrieval requests):\n     “my budget for today is 10000, how much more can I spend?”\n     “I spent 2000 yesterday, what’s my total for this week?”\n     “I bought beer earlier. How much did I spend on drinks overall?”\n     “2 days ago I spent 15000 at Starbucks. What category is that?”\n\nC. PRIORITY RULE (critical):\n   - If a message contains ANY question, even if the rest looks like data,\n     ALWAYS classify as retrieval_tool.\n\nD. Only classify as WRITE if:\n   - The message has NO question AND\n   - The ONLY possible intention is writing/updating.\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -448,
+        176
+      ],
+      "id": "4ffd3c77-df0e-459d-9b74-c9bb5310bead",
+      "name": "AI Agent1"
     }
   ],
   "connections": {
@@ -229,13 +248,7 @@
     },
     "Simple Memory": {
       "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "AI Agent": {
@@ -277,9 +290,9 @@
     "Telegram Trigger": [
       {
         "json": {
-          "update_id": 181780744,
+          "update_id": 181780773,
           "message": {
-            "message_id": 3016,
+            "message_id": 3074,
             "from": {
               "id": 2034253630,
               "is_bot": false,
@@ -295,15 +308,15 @@
               "username": "peter_aurelius",
               "type": "private"
             },
-            "date": 1764416468,
-            "text": "my budget for today is 10000, how much more can I spend?"
+            "date": 1764495565,
+            "text": "yesterday I did drink 4 beers at bali social club"
           }
         }
       }
     ]
   },
-  "versionId": "8503aa5b-f5f8-4781-b13f-0e60b0ef0711",
-  "versionCounter": 69,
+  "versionId": "a9873e34-803f-4012-afb3-db6f946a5b4b",
+  "versionCounter": 87,
   "triggerCount": 1,
   "shared": [
     {
@@ -327,7 +340,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-11-30T00:00:15.882Z",
+              "updatedAt": "2025-12-01T00:00:15.732Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -354,7 +367,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-29",
+              "lastActiveAt": "2025-11-30",
               "isPending": false
             }
           }
