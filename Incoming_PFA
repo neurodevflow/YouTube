@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-30T13:30:33.726Z",
+  "updatedAt": "2025-12-01T18:46:44.336Z",
   "createdAt": "2025-11-14T10:13:44.431Z",
   "id": "IgPl6godZmp2eO6t",
   "name": "Incoming_PFA",
@@ -14,8 +14,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -944,
-        -304
+        -720,
+        -80
       ],
       "id": "1a9d52c8-8fe8-4cd8-bfff-b1dd118d24c6",
       "name": "When Executed by Another Workflow"
@@ -26,7 +26,7 @@
         "text": "={{ $json.query || $json.message.text }}",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "=You are a strict accountant AI. You receive either:\n- a natural-language description of expenses, or\n- a receipt text.\n\nYour ONLY task is to produce a JSON object that exactly matches this schema:\n\n{\n  \"date\": \"string\",\n  \"description\": \"string\",\n  \"has_receipt\": \"boolean\",\n  \"payment_method\": \"string\",\n  \"items\": [\n    {\n      \"item_name\": \"string or null\",\n      \"quantity\": \"number or null\",\n      \"unit_price\": \"string or null\",\n      \"total_price\": \"string or null\",\n      \"location\": \"string or null\"\n    }\n  ]\n}\n\nCRITICAL RULES (follow exactly):\n\nNormalization rules (VERY IMPORTANT):\nAlways convert item names to their base canonical form.\nUse these equivalence rules:\n\nAny phrase that includes “marlboro”, “pack of marlboro”, “cigarettes”, “cigs” → item_name = \"marlboro\"\n\nAny phrase that includes “beer”, “glass of beer”, “bintang”, “draught beer” → item_name = \"beer\"\n\nAny phrase that includes “martini”, “glass of martini”, “a martini” → item_name = \"martini\"\n\nIf a quantity is expressed indirectly (e.g., “a beer”, “1 glass of beer”), treat it as quantity = 1, unless stated otherwise.\n\n1. Output **only** a JSON object. No explanations. No markdown. No commentary.\n2. All keys must exist. Never omit a required field.\n3. Use **double quotes** for all strings.\n4. For missing values, use **null** (not \"null\").\n5. For \"quantity\", output a **number**, never a string.\n6. \"date\":\n   - If the text contains a date → extract it as \"YYYY-MM-DD\".\n   - Otherwise → use {{$now}}.\n7. \"description\": a short human description of the expense.\n8. \"has_receipt\": true only if the text explicitly mentions a receipt.\n9. \"payment_method\":\n   - If mentioned (cash/card/debit/credit/etc), use it.\n   - Otherwise: \"cash\".\n10. \"items\": always output an array.\n11. Extract every item mentioned in the text:\n    - Drinks, food, services, activities.\n12. If an item has no price → unit_price = null, total_price = null.\n13. If the place is mentioned (e.g., Bali Social Club) → set \"location\" to that string.\n14. Activities:\n   Detect activities only when the text clearly refers to a place or activity that implies spending money.\n15. If the text clearly indicates spending money but does NOT mention any specific item names:\n\n   - Create ONE fallback item.\n   - Use the following logic:\n\n     If the text mentions \"drinks\", \"drinking\", etc. → item_name = \"various drinks\"\n     If the text mentions a restaurant, fast food place, cafe → item_name = \"various food\"\n     Otherwise → item_name = \"miscellaneous purchase\"\n\n   - quantity = 1\n   - unit_price = null\n   - total_price = \"<the amount mentioned>\"\n   - location = \"<the location if mentioned>\"\n\n   Use the following mapping:\n\n   - If the text contains \"padel\" → item_name = \"Padel Session Fee\"\n   - If the text contains \"amusement park\", \"theme park\", \"fun park\", \"park ticket\" → item_name = \"Amusement Park Entry Fee\"\n   - If the text contains \"gym\", \"fitness\", \"workout\" → item_name = \"Gym Session Fee\"\n   - If the text contains \"cinema\", \"movie\", \"film\" → item_name = \"Cinema Ticket\"\n   - If the text contains \"bowling\" → item_name = \"Bowling Game Fee\"\n   - If the text contains \"museum\" → item_name = \"Museum Ticket\"\n   - If the text contains \"swimming\", \"pool\" → item_name = \"Swimming Pool Entry Fee\"\n\n   If an activity does NOT match the above list → do NOT infer or create a service item.\n\n   Each activity item should follow this format:\n   {\n     \"item_name\": \"<mapped name>\",\n     \"quantity\": 1,\n     \"unit_price\": \"<price or null>\",\n     \"total_price\": \"<price or null>\",\n     \"location\": \"<place or null>\"\n   }\n\nSTRICT ANTI-HALLUCINATION RULE (MANDATORY):\n\nNever guess, infer, or invent any missing information.\n\nIf the text does not explicitly mention a price, you must set\n\"unit_price\": null and \"total_price\": null.\n\nYou must not estimate or assume typical or likely prices.\n\nIf the user does not provide a number → leave it null."
+          "systemMessage": "=You are a strict accountant AI. You receive either:\n- a natural-language description of expenses, or\n- a receipt text.\n\nYour ONLY task is to produce a JSON object that exactly matches this schema:\n\n{\n  \"date\": \"string\",\n  \"description\": \"string\",\n  \"has_receipt\": \"boolean\",\n  \"payment_method\": \"string\",\n  \"items\": [\n    {\n      \"item_name\": \"string or null\",\n      \"quantity\": \"number or null\",\n      \"unit_price\": \"string or null\",\n      \"total_price\": \"string or null\",\n      \"location\": \"string or null\"\n    }\n  ]\n}\n\nCRITICAL RULES (follow exactly):\n\nNormalization rules (VERY IMPORTANT):\nAlways convert item names to their base canonical form.\nUse these equivalence rules:\n\nAny phrase that includes “marlboro”, “pack of marlboro”, “cigarettes”, “cigs” → item_name = \"marlboro\"\n\nAny phrase that includes “beer”, “glass of beer”, “bintang”, “draught beer” → item_name = \"beer\"\n\nAny phrase that includes “martini”, “glass of martini”, “a martini” → item_name = \"martini\"\n\nIf a quantity is expressed indirectly (e.g., “a beer”, “1 glass of beer”), treat it as quantity = 1, unless stated otherwise.\nIf no quantity is given, treat is as quantity = 1\n\n1. Output **only** a JSON object. No explanations. No markdown. No commentary.\n2. All keys must exist. Never omit a required field.\n3. Use **double quotes** for all strings.\n4. For missing values, use **null** (not \"null\").\n5. For \"quantity\", output a **number**, never a string.\n6. Today's date is {{$now}}.\nInterpret dates relative to this value.\n\nRules:\n- \"yesterday\" = today minus exactly 1 day\n- \"the day before yesterday\" = today minus 2 days\n- \"tomorrow\" = today plus 1 day\n- \"last week\" = today minus 7 days\n\n7. \"description\": a short human description of the expense.\n8. \"has_receipt\": true only if the text explicitly mentions a receipt.\n9. \"payment_method\":\n   - If mentioned (cash/card/debit/credit/etc), use it.\n   - Otherwise: \"cash\".\n10. \"items\": always output an array.\n11. Extract every item mentioned in the text:\n    - Drinks, food, services, activities.\n12. If an item has no price → unit_price = null, total_price = null.\n13. If the place is mentioned (e.g., Bali Social Club) → set \"location\" to that string.\n14. Activities:\n   Detect activities only when the text clearly refers to a place or activity that implies spending money.\n15. If the price paid (per unit or in total) contains the currency (like euro, dollar, idr, ...), drop the currency and only output the amount (or number)\n16. If the text clearly indicates spending money but does NOT mention any specific item names:\n\n   - Create ONE fallback item.\n   - Use the following logic:\n\n     If the text mentions \"drinks\", \"drinking\", etc. → item_name = \"various drinks\"\n     If the text mentions a restaurant, fast food place, cafe → item_name = \"various food\"\n     Otherwise → item_name = \"miscellaneous purchase\"\n\n   - quantity = 1\n   - unit_price = null\n   - total_price = \"<the amount mentioned>\"\n   - location = \"<the location if mentioned>\"\n\n   Use the following mapping:\n\n   - If the text contains \"padel\"  → item_name = \"Padel Session Fee\"\n   - If the text contains \"amusement park\", \"theme park\", \"fun park\", \"park ticket\" → item_name = \"Amusement Park Entry Fee\"\n   - If the text contains \"gym\", \"fitness\", \"workout\" → item_name = \"Gym Session Fee\"\n   - If the text contains \"cinema\", \"movie\", \"film\" → item_name = \"Cinema Ticket\"\n   - If the text contains \"bowling\" → item_name = \"Bowling Game Fee\"\n   - If the text contains \"museum\" → item_name = \"Museum Ticket\"\n   - If the text contains \"swimming\", \"pool\" → item_name = \"Swimming Pool Entry Fee\"\n\n   If an activity does NOT match the above list → do NOT infer or create a service item.\n\n   Each activity item should follow this format:\n   {\n     \"item_name\": \"<mapped name>\",\n     \"quantity\": 1,\n     \"unit_price\": \"<price or null>\",\n     \"total_price\": \"<price or null>\",\n     \"location\": \"<place or null>\"\n   }\n\nSTRICT ANTI-HALLUCINATION RULE (MANDATORY):\n\nNever guess, infer, or invent any missing information.\n\nIf the text does not explicitly mention a price, you must set\n\"unit_price\": null and \"total_price\": null.\n\nYou must not estimate or assume typical or likely prices.\n\nIf the user does not provide a number → leave it null."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -52,8 +52,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -640,
-        144
+        -592,
+        112
       ],
       "id": "55075ab6-fc95-4dd0-b7fa-729f15867d08",
       "name": "OpenAI Chat Model",
@@ -85,7 +85,7 @@
         "filters": {
           "conditions": [
             {
-              "keyName": "item_name",
+              "keyName": "item_keyword",
               "condition": "eq",
               "keyValue": "={{ $json.item_name.toLowerCase() }}"
             }
@@ -95,15 +95,15 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        848,
-        -64
+        688,
+        -80
       ],
       "id": "924acc9e-fad7-4c50-91ce-d5dd08e893cd",
       "name": "Get many rows",
       "credentials": {
         "supabaseApi": {
-          "id": "KZ6ufBeRCXc7olwi",
-          "name": "Supabase ZerioBox"
+          "id": "uR11DW6nxElpCIXq",
+          "name": "Supabase Aistralis"
         }
       }
     },
@@ -159,16 +159,16 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        224,
-        -16
+        208,
+        -64
       ],
       "id": "40bfc82d-e257-45df-b7ec-41cccfe6ee40",
       "name": "Get many rows1",
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "KZ6ufBeRCXc7olwi",
-          "name": "Supabase ZerioBox"
+          "id": "uR11DW6nxElpCIXq",
+          "name": "Supabase Aistralis"
         }
       }
     },
@@ -233,7 +233,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1072,
+        1008,
         -64
       ],
       "id": "a391d2a8-0ca1-4551-964d-d7be16e447e7",
@@ -282,7 +282,7 @@
       "type": "n8n-nodes-base.summarize",
       "typeVersion": 1.1,
       "position": [
-        896,
+        656,
         -560
       ],
       "id": "74b1b087-57da-4d44-a285-e7921839b639",
@@ -316,8 +316,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        432,
-        -16
+        416,
+        -64
       ],
       "id": "24b51f59-139e-4ef8-84af-8144f3c7d05c",
       "name": "If"
@@ -339,8 +339,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        768,
-        496
+        800,
+        448
       ],
       "id": "a2e16409-5ca5-4267-b2c1-a2bb80413647",
       "name": "Edit Fields"
@@ -374,7 +374,7 @@
       "typeVersion": 2.2,
       "position": [
         560,
-        240
+        304
       ],
       "id": "f66b2266-a7cf-40e7-8948-7df80d8d7384",
       "name": "If1"
@@ -406,15 +406,15 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1344,
-        192
+        1168,
+        144
       ],
       "id": "4298e1eb-e990-408c-b668-d3a435e2f17e",
       "name": "Create a row",
       "credentials": {
         "supabaseApi": {
-          "id": "KZ6ufBeRCXc7olwi",
-          "name": "Supabase ZerioBox"
+          "id": "uR11DW6nxElpCIXq",
+          "name": "Supabase Aistralis"
         }
       }
     },
@@ -423,14 +423,14 @@
         "promptType": "define",
         "text": "={{ $('Loop Over Items').item.json.item_name }}",
         "options": {
-          "systemMessage": "You are a helpful assistant and you have to classify what the item is in.\nThe options are: drinks, sports, tobacco, snacks, food, leisure, fruit\nOnly output the option you have found, nothing else"
+          "systemMessage": "You are a helpful assistant and you have to classify what the item is in.\nThe options are: alcohol, drinks, sports, tobacco, snacks, food, leisure, fruit\nOnly output the option you have found, nothing else"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        768,
-        160
+        800,
+        144
       ],
       "id": "bca5c94f-76e0-43f1-8f82-88bddad7f243",
       "name": "AI Agent1"
@@ -449,8 +449,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        752,
-        336
+        816,
+        320
       ],
       "id": "9e81366d-241a-4f60-af70-cce3bdf9b7cb",
       "name": "OpenAI Chat Model1",
@@ -467,7 +467,7 @@
         "fieldsUi": {
           "fieldValues": [
             {
-              "fieldId": "item_name",
+              "fieldId": "item_keyword",
               "fieldValue": "={{ $('Loop Over Items').item.json.item_name }}"
             },
             {
@@ -484,15 +484,15 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1280,
-        592
+        1632,
+        160
       ],
       "id": "b6319621-59c7-47e3-956e-1b2989f1ebb4",
       "name": "Create a row1",
       "credentials": {
         "supabaseApi": {
-          "id": "KZ6ufBeRCXc7olwi",
-          "name": "Supabase ZerioBox"
+          "id": "uR11DW6nxElpCIXq",
+          "name": "Supabase Aistralis"
         }
       },
       "onError": "continueErrorOutput"
@@ -513,15 +513,15 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1520,
-        272
+        1392,
+        144
       ],
       "id": "6df503ce-a4ea-4800-b036-ba32e0af0dd2",
       "name": "Get a row",
       "credentials": {
         "supabaseApi": {
-          "id": "KZ6ufBeRCXc7olwi",
-          "name": "Supabase ZerioBox"
+          "id": "uR11DW6nxElpCIXq",
+          "name": "Supabase Aistralis"
         }
       }
     },
@@ -586,25 +586,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1552,
-        624
+        1792,
+        480
       ],
       "id": "6584b987-06b2-45e2-9acb-67731235f484",
       "name": "Edit Fields2"
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "123456"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        -544,
-        128
-      ],
-      "id": "df238599-328c-49d3-88a7-1f7fdb25d6db",
-      "name": "Simple Memory"
     },
     {
       "parameters": {
@@ -623,7 +609,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1088,
+        848,
         -560
       ],
       "id": "fc60fa51-d507-449a-9288-990c441c7fb2",
@@ -656,15 +642,15 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1312,
+        1024,
         -560
       ],
       "id": "e32af50d-3ef9-4fad-b28b-13492681108a",
       "name": "Create a row2",
       "credentials": {
         "supabaseApi": {
-          "id": "KZ6ufBeRCXc7olwi",
-          "name": "Supabase ZerioBox"
+          "id": "uR11DW6nxElpCIXq",
+          "name": "Supabase Aistralis"
         }
       }
     },
@@ -707,58 +693,15 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1952,
-        -336
+        1632,
+        -352
       ],
       "id": "54dec2c8-1fa7-4deb-8aec-eccd4d518f90",
       "name": "Create a row3",
       "credentials": {
         "supabaseApi": {
-          "id": "KZ6ufBeRCXc7olwi",
-          "name": "Supabase ZerioBox"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "tableId": "transaction_items",
-        "fieldsUi": {
-          "fieldValues": [
-            {
-              "fieldId": "transaction_id",
-              "fieldValue": "=14f1d734-4966-4d0e-a00e-7b2ed68936bd"
-            },
-            {
-              "fieldId": "item_name",
-              "fieldValue": "={{ $('Split Out1').item.json.item_name }}"
-            },
-            {
-              "fieldId": "quantity",
-              "fieldValue": "={{ $json.quantity }}"
-            },
-            {
-              "fieldId": "item_total",
-              "fieldValue": "={{ $json.total_price }}"
-            },
-            {
-              "fieldId": "category_id",
-              "fieldValue": "={{ $json.category_id }}"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        1888,
-        16
-      ],
-      "id": "c5240921-0436-4089-bafe-6a4b42e3db72",
-      "name": "Create a row4",
-      "credentials": {
-        "supabaseApi": {
-          "id": "KZ6ufBeRCXc7olwi",
-          "name": "Supabase ZerioBox"
+          "id": "uR11DW6nxElpCIXq",
+          "name": "Supabase Aistralis"
         }
       }
     },
@@ -779,7 +722,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1520,
+        1216,
         -560
       ],
       "id": "668359bb-e770-404f-81ec-c49cd792e673",
@@ -794,7 +737,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        1648,
+        1424,
         -352
       ],
       "id": "fd45bcf0-157e-4dbc-bc25-ded988f72523",
@@ -817,8 +760,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2160,
-        -336
+        1856,
+        -352
       ],
       "id": "3b2302ce-16a9-4c36-b223-24e00f36a45c",
       "name": "Edit Fields5"
@@ -1067,17 +1010,6 @@
         ]
       ]
     },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Summarize": {
       "main": [
         [
@@ -1161,13 +1093,13 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "query": "yesterday, I played padel at bali Social club and drank 4 beers there"
+          "query": "4 days ago: - 2 bananas for 1.2 - cheese for 2.7 - bread for 1.1 - butter for 0.9 at The Farmer House"
         }
       }
     ]
   },
-  "versionId": "f74915e0-cba3-4089-88a0-bc2f54e62759",
-  "versionCounter": 185,
+  "versionId": "c82309b6-acc3-461c-9b15-fac4cca1ae9a",
+  "versionCounter": 198,
   "triggerCount": 0,
   "shared": [
     {
@@ -1191,7 +1123,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-12-01T00:00:15.732Z",
+              "updatedAt": "2025-12-02T00:00:36.327Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -1218,7 +1150,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-11-30",
+              "lastActiveAt": "2025-12-01",
               "isPending": false
             }
           }
