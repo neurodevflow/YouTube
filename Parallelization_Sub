@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-07T13:53:29.197Z",
+  "updatedAt": "2025-12-15T10:51:17.308Z",
   "createdAt": "2025-12-07T13:49:37.099Z",
   "id": "Ir2PQaIg7E3CoCwe",
   "name": "Parallelization_Sub",
@@ -59,6 +59,29 @@
       ],
       "id": "f44e89a8-8e8f-401e-a48e-8c753d4420a7",
       "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0c8b3920-de4f-4d52-b933-7961b1d38786",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        16
+      ],
+      "id": "6236ce26-5d17-4908-a02e-8575f065b059",
+      "name": "Edit Fields"
     }
   ],
   "connections": {
@@ -83,6 +106,17 @@
           }
         ]
       ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -90,9 +124,19 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": {},
-  "versionId": "8fd34ad2-cec5-4f9d-b1ad-a3b27159ed38",
-  "versionCounter": 5,
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "row_number": 6,
+          "Name": "Italy",
+          "Capital": ""
+        }
+      }
+    ]
+  },
+  "versionId": "2c3edd93-5240-4744-adf0-3312a9e0d62d",
+  "versionCounter": 8,
   "triggerCount": 0,
   "shared": [
     {
@@ -116,7 +160,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-12-14T00:00:41.353Z",
+              "updatedAt": "2025-12-16T00:00:43.253Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -143,7 +187,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-13",
+              "lastActiveAt": "2025-12-15",
               "isPending": false
             }
           }
