@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-13T18:16:09.563Z",
+  "updatedAt": "2025-12-15T16:21:30.273Z",
   "createdAt": "2025-12-10T13:44:01.029Z",
   "id": "kzPeHoj4g2IaILq9",
   "name": "Enrich",
@@ -590,32 +590,6 @@
     },
     {
       "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyWeek"
-            }
-          ]
-        },
-        "filters": {}
-      },
-      "type": "n8n-nodes-base.gmailTrigger",
-      "typeVersion": 1.3,
-      "position": [
-        -576,
-        608
-      ],
-      "id": "1b21d6d8-1ed5-4e3f-823c-5ff9f313862c",
-      "name": "Gmail Trigger",
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "NJotz0jOs2Osf7BJ",
-          "name": "Gmail account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "assignments": {
           "assignments": [
             {
@@ -1002,17 +976,6 @@
         ]
       ]
     },
-    "Gmail Trigger": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields5",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Edit Fields5": {
       "main": [
         [
@@ -1030,29 +993,24 @@
   },
   "staticData": {
     "node:Typeform Trigger": {
-      "webhookId": "n8n-v6ubmue3zx"
+      "webhookId": "n8n-ehwlj96nvn"
     },
     "node:Stripe Trigger": {
-      "webhookId": "we_1SdxMTAGnfsk8FMS0js1FpG4",
+      "webhookId": "we_1SeeWcAGnfsk8FMSeZpPkgbD",
       "webhookEvents": [
         "checkout.session.completed",
         "invoice.payment_succeeded"
       ],
-      "webhookSecret": "whsec_nwE7qaKqu9glfUzEmGie1KqZK4bivC9k"
+      "webhookSecret": "whsec_w4CSU18xtDEYIKhl72JQWsIimBrUCPoO"
     },
     "node:Cal.com Trigger": {
-      "webhookId": "8aba71af-5273-4a1d-ae36-5a8637385fe6"
+      "webhookId": "97f9f92d-ffa9-4afe-a64c-1e0b8e239fc8"
     },
     "node:Gmail Trigger": {
       "Gmail Trigger": {
-        "lastTimeChecked": 1765714074,
+        "lastTimeChecked": 1765803798,
         "possibleDuplicates": [
-          "19b1cc29e2fc0eb1",
-          "19b1c9266358cbbc",
-          "19b1c3bb12a6b9d7",
-          "19b1c39b42f22ce9",
-          "19b1c38e74488b3a",
-          "19b1c261c69a55ed"
+          "19b221bb0b70d4ba"
         ]
       }
     }
@@ -1111,9 +1069,9 @@
       }
     ]
   },
-  "versionId": "dcbdc1b6-cadf-410d-95df-ce1a27e80e4f",
-  "versionCounter": 108,
-  "triggerCount": 6,
+  "versionId": "33cf25a4-fe2e-4f8a-a3ea-caf6d556f3e2",
+  "versionCounter": 119,
+  "triggerCount": 5,
   "shared": [
     {
       "updatedAt": "2025-12-10T13:44:01.029Z",
@@ -1136,7 +1094,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-12-15T00:00:42.365Z",
+              "updatedAt": "2025-12-16T00:00:43.253Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -1163,7 +1121,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-14",
+              "lastActiveAt": "2025-12-15",
               "isPending": false
             }
           }
