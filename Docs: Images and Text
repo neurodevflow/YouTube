@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-28T16:53:58.785Z",
+  "updatedAt": "2025-12-29T11:37:18.278Z",
   "createdAt": "2025-12-23T07:25:26.177Z",
   "id": "nDav0ufd69WpQ5WA",
   "name": "Docs: Images and Text",
@@ -12,8 +12,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        0,
-        0
+        -192,
+        -160
       ],
       "id": "1edccaf6-81ef-4c23-9e04-fcfdfda20c6b",
       "name": "When clicking ‘Execute workflow’"
@@ -34,8 +34,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        208,
-        0
+        -32,
+        -160
       ],
       "id": "bb11b472-ccc5-49f4-9780-29929446c2bb",
       "name": "Copy file",
@@ -68,8 +68,8 @@
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        416,
-        0
+        448,
+        -80
       ],
       "id": "c17e0f7f-d366-48ef-8352-c5760ce1aa40",
       "name": "Update a document",
@@ -88,8 +88,8 @@
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        624,
-        0
+        656,
+        -80
       ],
       "id": "b42992b4-cb15-4e0e-bf25-bbf67fcc4870",
       "name": "Get a document",
@@ -118,7 +118,7 @@
       "typeVersion": 3.4,
       "position": [
         832,
-        0
+        -96
       ],
       "id": "7803245a-9e5b-40de-90ca-f72e265b7ff4",
       "name": "Edit Fields"
@@ -137,8 +137,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        592,
-        -176
+        816,
+        224
       ],
       "id": "1d404856-cb50-4ff5-832a-27d2c7aded9d",
       "name": "HTTP Request",
@@ -218,8 +218,8 @@
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        800,
-        -176
+        1072,
+        288
       ],
       "id": "270752c1-0d4e-4870-84eb-4c4d9aa9dd51",
       "name": "Update a document1",
@@ -248,8 +248,8 @@
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        1008,
-        -176
+        1248,
+        272
       ],
       "id": "5461c42b-5b34-4dd4-9bf9-afa7c2fde8f0",
       "name": "Update a document2",
@@ -262,49 +262,294 @@
     },
     {
       "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1ln6NbvPqDUKWrmxl1q2PO0qRiWLvZR1PyAYAgchWsYs",
-          "mode": "list",
-          "cachedResultName": "Stats",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ln6NbvPqDUKWrmxl1q2PO0qRiWLvZR1PyAYAgchWsYs/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ln6NbvPqDUKWrmxl1q2PO0qRiWLvZR1PyAYAgchWsYs/edit#gid=0"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        352,
-        144
-      ],
-      "id": "797195ba-9375-4d63-8d85-1d4f0c5899fa",
-      "name": "Get row(s) in sheet",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "XkUcr0YLOP2CkVg1",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "jsCode": "const SHEET_ID = '1ln6NbvPqDUKWrmxl1q2PO0qRiWLvZR1PyAYAgchWsYs'; // Replace with your sheet ID\nconst CHART_GID = '0'; // Usually 0 for first sheet, find in URL\nconst CHART_INDEX = 0; // Which chart in the sheet (0 = first)\n\n// Construct chart URL\nconst chartUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/chart?gid=${CHART_GID}&chartNumber=${CHART_INDEX}&headers=false&size=800x400`;\n\n// Get the first item from input\nconst inputData = $input.first();\n\n// Return the chart URL\nreturn {\n  chartImageUrl: chartUrl,\n  timestamp: new Date().toISOString(),\n  originalData: inputData.json\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        320,
-        -256
+        496,
+        288
       ],
       "id": "d91cb9c9-6d02-4e9f-8d7a-189388135713",
       "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1ln6NbvPqDUKWrmxl1q2PO0qRiWLvZR1PyAYAgchWsYs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        256,
+        -256
+      ],
+      "id": "ce2ce608-af1d-4bc9-8020-74eafba35c62",
+      "name": "HTTP Request2",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "s3C4lrsUXNTatIUs",
+          "name": "Google"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dc5d8dd9-2531-4af3-8e79-c4068602ba87",
+              "name": "chart_id",
+              "value": "={{ $json.sheets[0].charts[0].chartId }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        -256
+      ],
+      "id": "c66c5c4f-0eb3-4512-981d-4d9613af7bbb",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "url": "=https://docs.google.com/spreadsheets/d/1ln6NbvPqDUKWrmxl1q2PO0qRiWLvZR1PyAYAgchWsYs/chart_image?oid={{ $json.chart_id }}&format=png",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          },
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1008,
+        -144
+      ],
+      "id": "94853ff8-c436-4a10-88ef-1a74e25d9e04",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Copy file').item.json.id }}:batchUpdate",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "requests[0].insertInlineSheetsChart.spreadsheetId",
+              "value": "1ln6NbvPqDUKWrmxl1q2PO0qRiWLvZR1PyAYAgchWsYs"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        864,
+        -240
+      ],
+      "id": "b742c5ed-e390-4c78-a62b-d815db207fee",
+      "name": "HTTP Request1",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "s3C4lrsUXNTatIUs",
+          "name": "Google"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  requests: [\n    {\n      \"insertInlineSheetsChart\": {\n        \"location\": {\n          \"index\": 1 \n        },\n        \"spreadsheetId\": \"1ln6NbvPqDUKWrmxl1q2PO0qRiWLvZR1PyAYAgchWsYs\",\n        \"chartId\": 725857631,\n        \"linkingMode\": \"LINKED\"\n      }\n    }\n  ]\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        -240
+      ],
+      "id": "12ac1ebc-f1a7-421a-99eb-6e0854a01bc0",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "url": "https://script.google.com/macros/s/AKfycbzSNWI_84goZz3zP37oCMfZN8iBR6gO3_CSGuySvxCcLM_kssRmFT4iYae8w4EtByUQhg/exec",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "1ln6NbvPqDUKWrmxl1q2PO0qRiWLvZR1PyAYAgchWsYs"
+            },
+            {
+              "name": "sheet",
+              "value": "Sheet1"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        128,
+        -160
+      ],
+      "id": "5eb33664-12f9-4512-b828-c59088f97aba",
+      "name": "HTTP Request4",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "s3C4lrsUXNTatIUs",
+          "name": "Google"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data",
+        "options": {
+          "fileName": "fff.png",
+          "mimeType": "image/png"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -176,
+        48
+      ],
+      "id": "3944f534-b62f-4b32-a1a2-0bcfce449dca",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "name": "chart",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -32,
+        48
+      ],
+      "id": "5a73ee00-9958-4878-88d5-65443833dba2",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VcFFZkWlXOO43tdB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        144,
+        48
+      ],
+      "id": "4dec86bd-03d5-493f-9a70-c2150f160e2c",
+      "name": "Share file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VcFFZkWlXOO43tdB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Copy file').item.json.id }}:batchUpdate ",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"insertInlineImage\": {\n        \"location\": {\n          \"index\": 2\n        },\n        \"uri\": \"https://lh3.googleusercontent.com/u/0/d/{{ $('Upload file').item.json.id }}\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -176,
+        224
+      ],
+      "id": "afa30fd4-8074-4a78-9823-53301cfd19ac",
+      "name": "HTTP Request5",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "s3C4lrsUXNTatIUs",
+          "name": "Google"
+        }
+      }
     }
   ],
   "connections": {
@@ -312,7 +557,7 @@
       "main": [
         [
           {
-            "node": "Get row(s) in sheet",
+            "node": "Copy file",
             "type": "main",
             "index": 0
           }
@@ -323,7 +568,7 @@
       "main": [
         [
           {
-            "node": "Update a document",
+            "node": "HTTP Request4",
             "type": "main",
             "index": 0
           }
@@ -406,6 +651,83 @@
           }
         ]
       ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Share file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share file1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -416,8 +738,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "acd931bf-d0a7-4d47-8f4f-6db2ab50dc75",
-  "versionCounter": 10,
+  "versionId": "5ec5cae1-8725-468f-a441-c519d6ec16d0",
+  "versionCounter": 14,
   "triggerCount": 0,
   "shared": [
     {
@@ -441,7 +763,7 @@
             "userId": "8790342e-b65e-4ef9-99ec-48a531aa0094",
             "projectId": "2KiFcKNLK1JyaklJ",
             "user": {
-              "updatedAt": "2025-12-29T00:00:39.132Z",
+              "updatedAt": "2025-12-30T00:00:39.142Z",
               "createdAt": "2025-07-05T04:33:38.764Z",
               "id": "8790342e-b65e-4ef9-99ec-48a531aa0094",
               "email": "peterjawel@gmail.com",
@@ -468,7 +790,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-28",
+              "lastActiveAt": "2025-12-29",
               "isPending": false
             }
           }
